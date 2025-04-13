@@ -1,5 +1,5 @@
 const Parking = require("../models/Parking");
-
+const { sendWhatsAppMessage } = require("../services/whatsappService.js");
 const createParkingEntry = async (req, res) => {
   try {
     const { vehicleNo, vehicleType, phone, parkingDuration } = req.body;
@@ -12,6 +12,8 @@ const createParkingEntry = async (req, res) => {
     });
 
     // TODO: Trigger WhatsApp + payment link here
+    const message = `Your parking entry has been created. Vehicle No: ${vehicleNo}, Duration: ${parkingDuration} hours.`;
+    await sendWhatsAppMessage(phone, message);
 
     res.status(201).json({ message: "Entry recorded", entry });
   } catch (err) {
