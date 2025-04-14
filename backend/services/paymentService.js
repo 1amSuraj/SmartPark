@@ -25,7 +25,7 @@ const generatePaymentLink = async (amount, phone, vehicleNo) => {
 
     const response = await razorpay.paymentLink.create(options);
     console.log("Payment link generated:", response);
-    return response.short_url; // Return the payment link
+    return response; // Return the payment link
   } catch (error) {
     console.error("Error generating payment link:", error);
     throw error;

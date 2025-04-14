@@ -11,6 +11,7 @@ const parkingSchema = new mongoose.Schema({
     enum: ["pending", "paid"],
     default: "pending",
   },
+  paymentLinkId: { type: String },
 });
 
 module.exports = mongoose.model("Parking", parkingSchema);
