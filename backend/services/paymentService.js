@@ -21,6 +21,7 @@ const generatePaymentLink = async (amount, phone, vehicleNo) => {
         email: false,
       },
       reminder_enable: true,
+      expire_by: Math.floor(Date.now() / 1000) + 960, //16 minutes
     };
 
     const response = await razorpay.paymentLink.create(options);
