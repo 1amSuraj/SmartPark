@@ -5,7 +5,12 @@ const razorpay = new Razorpay({
   key_secret: "wpxM5PmoTMRa9j8d2tOzOc27", // Replace with your Razorpay Key Secret
 });
 
-const generatePaymentLink = async (amount, phone, vehicleNo) => {
+const generatePaymentLink = async (
+  amount,
+  phone,
+  vehicleNo,
+  parkingDuration
+) => {
   try {
     const options = {
       amount: amount * 100, // Amount in paise (e.g., 500 INR = 50000 paise)
@@ -21,7 +26,7 @@ const generatePaymentLink = async (amount, phone, vehicleNo) => {
         email: false,
       },
       reminder_enable: true,
-      expire_by: Math.floor(Date.now() / 1000) + 960, //16 minutes
+      expire_by: Math.floor(Date.now() / 1000) + parkingDuration * 60 * 60, //16 minutes
     };
 
     const response = await razorpay.paymentLink.create(options);
