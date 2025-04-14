@@ -143,18 +143,14 @@ const handlePayMessage = async (req, res) => {
       const extraDuration = totalDuration - parkingEntry.parkingDuration;
       console.log(3.5);
 
-      if (extraDuration <= 0) {
-        if (parkingEntry.paymentStatus === "paid") {
-          console.log(3.7);
-          return res
-            .status(200)
-            .json({ message: "No extra charges. User has already paid." });
-        } else {
-          return res
-            .status(200)
-            .json({ message: "No extra charges. Payment is still unpaid." });
-        }
-      }
+      // if (extraDuration <= 0) {
+
+      //     console.log(3.7);
+      //     return res
+      //       .status(200)
+      //       .json({ message: "No extra charges. User has already paid." });
+      //   }
+
       console.log(4);
       const extraCharges = extraDuration * 70; // 70 INR per extra hour
 
