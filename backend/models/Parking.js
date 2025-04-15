@@ -6,12 +6,15 @@ const parkingSchema = new mongoose.Schema({
   phone: { type: String, required: true },
   parkingDuration: { type: Number, required: true }, // in hours
   entryTime: { type: Date, default: Date.now },
+  exitTime: { type: Date }, // New field to store the exit time
   paymentStatus: {
     type: String,
     enum: ["pending", "paid"],
     default: "pending",
   },
   paymentLinkId: { type: String },
+  totalAmount: { type: Number, default: 0 }, // New field to store the total amount
+  notificationSent: { type: Boolean, default: false }, // New field to track if the notification has been sent
 });
 
 module.exports = mongoose.model("Parking", parkingSchema);

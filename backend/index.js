@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 const parkingRoutes = require("./routes/parkingRoutes.js");
 
 const connectDB = require("./config/db.js");
+const scheduleJobs = require("./jobs/scheduler.js");
 
 dotenv.config();
 
@@ -19,6 +20,9 @@ app.get("/hello", () => {
 app.use("/api/parking", parkingRoutes);
 
 connectDB();
+
+//Starts the cron job scheduler
+scheduleJobs();
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
