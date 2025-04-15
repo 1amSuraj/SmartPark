@@ -14,7 +14,6 @@ const scheduleJobs = () => {
       // Find parking entries where the duration has ended and the notification has not been sent
       const expiredEntries = await Parking.find({
         notificationSent: false,
-        paymentStatus: "pending",
         $expr: {
           $lte: [
             {
