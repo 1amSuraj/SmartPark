@@ -26,7 +26,8 @@ const generatePaymentLink = async (
         email: false,
       },
       reminder_enable: true,
-      expire_by: Math.floor(Date.now() / 1000) + parkingDuration * 60 * 60, //16 minutes
+      expire_by: Math.floor(Date.now() / 1000) + parkingDuration * 60 * 60,
+      // expire_by: Math.floor(Date.now() / 1000) + 960,
     };
 
     const response = await razorpay.paymentLink.create(options);

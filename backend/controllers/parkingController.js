@@ -71,38 +71,120 @@ const handlePaymentWebhook = async (req, res) => {
 // const handlePayMessage = async (req, res) => {
 //   try {
 //     const { phone } = req.body; // Assume the phone number is sent in the request body
-
 //     // Find the parking entry for the user
-//     const parkingEntry = await Parking.findOne({ phone, paymentStatus: "pending" });
+//     const parkingEntry = await Parking.findOne({ phone });
 
 //     if (!parkingEntry) {
-//       return res.status(404).json({ message: "No pending payment found for this user." });
+//       return res
+//         .status(404)
+//         .json({ message: "No parking entry found for this user." });
 //     }
 
+//     //pending but duration still left
+//     if (parkingEntry.paymentStatus === "pending") {
+//       const currentTime = new Date();
+//       const entryTime = new Date(parkingEntry.entryTime);
+//       const totalDuration = Math.ceil(
+//         (currentTime - entryTime) / (1000 * 60 * 60)
+//       );
+
+//       const extraDuration = totalDuration - parkingEntry.parkingDuration;
+
+//       if (extraDuration <= 0) {
+//         return res
+//           .status(200)
+//           .json({
+//             message: "No extra charges. User just need to pay the normal bill.",
+//           });
+//       }
+//     }
+
+//     // Check if the user has already paid the normal bill
+//     if (parkingEntry.paymentStatus === "paid") {
+//       // Calculate the total duration the user has stayed
+//       const currentTime = new Date();
+//       const entryTime = new Date(parkingEntry.entryTime);
+//       const totalDuration = Math.ceil(
+//         (currentTime - entryTime) / (1000 * 60 * 60)
+//       ); // Convert milliseconds to hours
+//       // Calculate the extra charges
+//       const extraDuration = totalDuration - parkingEntry.parkingDuration;
+
+//       if (extraDuration <= 0) {
+//         return res
+//           .status(200)
+//           .json({ message: "No extra charges. User has already paid." });
+//       }
+
+//       const extraCharges = extraDuration * 70; // 70 INR per extra hour
+
+//       // Calculate time in hours for expiry payment link
+//       const fullHourMark = entryTime + totalDuration * 60 * 60 * 1000;
+//       const timeLeft = Math.max(
+//         0,
+//         (fullHourMark - currentTime) / (1000 * 60 * 60)
+//       ); // in hours
+
+//       // Generate a new payment link for the extra charges
+//       const paymentLink = await generatePaymentLink(
+//         extraCharges,
+//         parkingEntry.phone,
+//         parkingEntry.vehicleNo,
+//         timeLeft
+//       );
+//       // Send WhatsApp message with the new payment link
+//       const message = `You have stayed beyond your booked duration. Vehicle No: ${parkingEntry.vehicleNo}. Extra Duration: ${extraDuration} hours. Extra Charges: ₹${extraCharges}. Please complete your payment here: ${paymentLink.short_url}`;
+//       await sendWhatsAppMessage(parkingEntry.phone, message);
+//       return res.status(200).json({
+//         message: "New payment link sent for extra charges.",
+//         paymentLink,
+//       });
+//     }
+
+//     // If the user has not paid the normal bill
 //     // Calculate the total duration the user has stayed
 //     const currentTime = new Date();
 //     const entryTime = new Date(parkingEntry.entryTime);
-//     const totalDuration = Math.ceil((currentTime - entryTime) / (1000 * 60 * 60)); // Convert milliseconds to hours
+//     const totalDuration = Math.ceil(
+//       (currentTime - entryTime) / (1000 * 60 * 60)
+//     ); // Convert milliseconds to hours
 
-//     // Calculate the extra charges
+//     // Calculate the normal bill and extra charges
 //     const extraDuration = totalDuration - parkingEntry.parkingDuration;
+//     console.log(extraDuration);
 //     const normalBill = parkingEntry.parkingDuration * 50; // 50 INR per hour
 //     const extraCharges = extraDuration > 0 ? extraDuration * 70 : 0; // 70 INR per extra hour
 //     const totalAmount = normalBill + extraCharges;
 
 //     // Expire the old payment link
-//     parkingEntry.paymentLinkExpired = true;
-//     parkingEntry.totalAmountDue = totalAmount;
+
+//     // parkingEntry.paymentLinkExpired = true;
+//     // parkingEntry.totalAmountDue = totalAmount;
 //     await parkingEntry.save();
 
+//     // Calculate time in hours for expiry payment link
+//     const fullHourMark = entryTime + totalDuration * 60 * 60 * 1000;
+//     const timeLeft = Math.max(
+//       0,
+//       (fullHourMark - currentTime) / (1000 * 60 * 60)
+//     ); // in hours
+
 //     // Generate a new payment link
-//     const paymentLink = await generatePaymentLink(totalAmount, parkingEntry.phone, parkingEntry.vehicleNo);
+//     const paymentLink = await generatePaymentLink(
+//       // totalAmount,
+//       totalAmount,
+//       parkingEntry.phone,
+//       parkingEntry.vehicleNo,
+//       timeLeft
+//     );
 
 //     // Send WhatsApp message with the new payment link
 //     const message = `Your updated parking bill is ready. Vehicle No: ${parkingEntry.vehicleNo}. Total Amount: ₹${totalAmount}. Please complete your payment here: ${paymentLink.short_url}`;
 //     await sendWhatsAppMessage(parkingEntry.phone, message);
 
-//     res.status(200).json({ message: "New payment link sent to the user.", paymentLink });
+//     res
+//       .status(200)
+//       .json({ message: "New payment link sent to the user.", paymentLink });
 //   } catch (err) {
 //     console.error("Error handling 'pay' message:", err);
 //     res.status(500).json({ message: "Server error" });
@@ -111,149 +193,78 @@ const handlePaymentWebhook = async (req, res) => {
 
 const handlePayMessage = async (req, res) => {
   try {
-    const { phone } = req.body; // Assume the phone number is sent in the request body
-    console.log(1);
+    const { phone } = req.body;
+
     // Find the parking entry for the user
     const parkingEntry = await Parking.findOne({ phone });
-
     if (!parkingEntry) {
       return res
         .status(404)
         .json({ message: "No parking entry found for this user." });
     }
-    console.log(2);
 
-    if (parkingEntry.paymentStatus === "pending") {
-      console.log(6.6);
-      return res
-        .status(200)
-        .json({ message: "No extra charges. Payment is still unpaid." });
-    }
-
-    // Check if the user has already paid the normal bill
-    if (parkingEntry.paymentStatus === "paid") {
-      // Calculate the total duration the user has stayed
-      const currentTime = new Date();
-      const entryTime = new Date(parkingEntry.entryTime);
-      const totalDuration = Math.ceil(
-        (currentTime - entryTime) / (1000 * 60 * 60)
-      ); // Convert milliseconds to hours
-      console.log(3);
-      // Calculate the extra charges
-      const extraDuration = totalDuration - parkingEntry.parkingDuration;
-      console.log(3.5);
-
-      // if (extraDuration <= 0) {
-
-      //     console.log(3.7);
-      //     return res
-      //       .status(200)
-      //       .json({ message: "No extra charges. User has already paid." });
-      //   }
-
-      console.log(4);
-      const extraCharges = extraDuration * 70; // 70 INR per extra hour
-
-      // Calculate time in hours for expiry payment link
-      const fullHourMark = entryTime + totalDuration * 60 * 60 * 1000;
-      const timeLeft = Math.max(
-        0,
-        (fullHourMark - currentTime) / (1000 * 60 * 60)
-      ); // in hours
-
-      // Generate a new payment link for the extra charges
-      const paymentLink = await generatePaymentLink(
-        extraCharges,
-        parkingEntry.phone,
-        parkingEntry.vehicleNo,
-        timeLeft
-      );
-      console.log(5);
-      // Send WhatsApp message with the new payment link
-      const message = `You have stayed beyond your booked duration. Vehicle No: ${parkingEntry.vehicleNo}. Extra Duration: ${extraDuration} hours. Extra Charges: ₹${extraCharges}. Please complete your payment here: ${paymentLink.short_url}`;
-      await sendWhatsAppMessage(parkingEntry.phone, message);
-      console.log(6);
-      return res.status(200).json({
-        message: "New payment link sent for extra charges.",
-        paymentLink,
-      });
-    }
-
-    // If the user has not paid the normal bill
-    // Calculate the total duration the user has stayed
+    // Calculate total duration and extra duration
     const currentTime = new Date();
     const entryTime = new Date(parkingEntry.entryTime);
     const totalDuration = Math.ceil(
       (currentTime - entryTime) / (1000 * 60 * 60)
     ); // Convert milliseconds to hours
-
-    // Calculate the normal bill and extra charges
     const extraDuration = totalDuration - parkingEntry.parkingDuration;
-    console.log(extraDuration);
+
+    // Handle case where payment is pending but no extra charges apply
+    if (parkingEntry.paymentStatus === "pending" && extraDuration <= 0) {
+      return res.status(200).json({
+        message: "No extra charges. User just needs to pay the normal bill.",
+      });
+    }
+
+    // Calculate charges
     const normalBill = parkingEntry.parkingDuration * 50; // 50 INR per hour
     const extraCharges = extraDuration > 0 ? extraDuration * 70 : 0; // 70 INR per extra hour
-    const totalAmount = normalBill + extraCharges;
+    const totalAmount =
+      parkingEntry.paymentStatus === "paid"
+        ? extraCharges
+        : normalBill + extraCharges;
 
-    // Expire the old payment link
-
-    // parkingEntry.paymentLinkExpired = true;
-    // parkingEntry.totalAmountDue = totalAmount;
-    await parkingEntry.save();
-
-    // Calculate time in hours for expiry payment link
-    const fullHourMark = entryTime + totalDuration * 60 * 60 * 1000;
-    const timeLeft = Math.max(
-      0,
-      (fullHourMark - currentTime) / (1000 * 60 * 60)
-    ); // in hours
+    // If no extra charges and payment is already made, return early
+    if (totalAmount === 0) {
+      return res
+        .status(200)
+        .json({ message: "No extra charges. User has already paid." });
+    }
 
     // Generate a new payment link
+    const timeLeft = Math.max(
+      0,
+      (entryTime.getTime() + totalDuration * 60 * 60 * 1000 - currentTime) /
+        (1000 * 60 * 60)
+    ); // Time left in hours
     const paymentLink = await generatePaymentLink(
-      // totalAmount,
       totalAmount,
       parkingEntry.phone,
       parkingEntry.vehicleNo,
       timeLeft
     );
 
+    parkingEntry.paymentLinkId = paymentLink.id;
+    await parkingEntry.save();
+
     // Send WhatsApp message with the new payment link
-    const message = `Your updated parking bill is ready. Vehicle No: ${parkingEntry.vehicleNo}. Total Amount: ₹${totalAmount}. Please complete your payment here: ${paymentLink.short_url}`;
+    const message =
+      parkingEntry.paymentStatus === "paid"
+        ? `You have stayed beyond your booked duration. Vehicle No: ${parkingEntry.vehicleNo}. Extra Duration: ${extraDuration} hours. Extra Charges: ₹${extraCharges}. Please complete your payment here: ${paymentLink.short_url}`
+        : `Your updated parking bill is ready. Vehicle No: ${parkingEntry.vehicleNo}. Total Amount: ₹${totalAmount}. Please complete your payment here: ${paymentLink.short_url}`;
     await sendWhatsAppMessage(parkingEntry.phone, message);
 
-    res
-      .status(200)
-      .json({ message: "New payment link sent to the user.", paymentLink });
+    res.status(200).json({
+      message: "New payment link sent to the user.",
+      paymentLink,
+    });
   } catch (err) {
     console.error("Error handling 'pay' message:", err);
     res.status(500).json({ message: "Server error" });
   }
 };
-
-// const handleGupshupWebhook = async (req, res) => {
-//   try {
-//     const { type, payload } = req.body;
-//     console.log(payload);
-//     // Check if the incoming message is of type "message"
-//     if (type === "message") {
-//       const { payload, sender } = payload;
-//       console.log()
-//       // Check if the message text is "pay"
-//       if (payload.text.toLowerCase() === "pay") {
-//         console.log(`Received "pay" message from ${sender}`);
-
-//         // Trigger the handlePayMessage function
-//         req.body.phone = sender; // Set the phone number in the request body
-//         await handlePayMessage(req, res);
-//         return;
-//       }
-//     }
-
-//     res.status(200).json({ message: "Message received but not processed." });
-//   } catch (error) {
-//     console.error("Error handling Gupshup webhook:", error);
-//     res.status(500).json({ message: "Server error" });
-//   }
-// };
 
 const handleGupshupWebhook = async (req, res) => {
   try {
