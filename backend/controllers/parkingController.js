@@ -36,37 +36,37 @@ const createParkingEntry = async (req, res) => {
   }
 };
 
-const handlePaymentWebhook = async (req, res) => {
-  try {
-    const payload = req.body;
+// const handlePaymentWebhook = async (req, res) => {
+//   try {
+//     const payload = req.body;
 
-    // Verify the event type
-    if (payload.event === "payment_link.paid") {
-      const paymentLinkId = payload.payload.payment_link.entity.id;
+//     // Verify the event type
+//     if (payload.event === "payment_link.paid") {
+//       const paymentLinkId = payload.payload.payment_link.entity.id;
 
-      // Update payment status in the database
-      const updatedEntry = await Parking.findOneAndUpdate(
-        { paymentLinkId }, // Assuming you store Razorpay's payment link ID in your database
-        { paymentStatus: "paid" },
-        { new: true }
-      );
+//       // Update payment status in the database
+//       const updatedEntry = await Parking.findOneAndUpdate(
+//         { paymentLinkId }, // Assuming you store Razorpay's payment link ID in your database
+//         { paymentStatus: "paid" },
+//         { new: true }
+//       );
 
-      if (!updatedEntry) {
-        return res.status(404).json({ message: "Parking entry not found" });
-      }
+//       if (!updatedEntry) {
+//         return res.status(404).json({ message: "Parking entry not found" });
+//       }
 
-      console.log(
-        `Payment status updated for vehicle ${updatedEntry.vehicleNo}`
-      );
-      res.status(200).json({ message: "Payment status updated", updatedEntry });
-    } else {
-      res.status(400).json({ message: "Unhandled event type" });
-    }
-  } catch (error) {
-    console.error("Error handling Razorpay webhook:", error);
-    res.status(500).json({ message: "Server error" });
-  }
-};
+//       console.log(
+//         `Payment status updated for vehicle ${updatedEntry.vehicleNo}`
+//       );
+//       res.status(200).json({ message: "Payment status updated", updatedEntry });
+//     } else {
+//       res.status(400).json({ message: "Unhandled event type" });
+//     }
+//   } catch (error) {
+//     console.error("Error handling Razorpay webhook:", error);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// };
 
 // const handlePayMessage = async (req, res) => {
 //   try {
@@ -191,8 +191,50 @@ const handlePaymentWebhook = async (req, res) => {
 //   }
 // };
 
+const handlePaymentWebhook = async (req, res) => {
+  try {
+    const payload = req.body;
+
+    // Verify the event type
+    if (payload.event === "payment_link.paid") {
+      const paymentLinkId = payload.payload.payment_link.entity.id;
+      const paidAmount = payload.payload.payment_link.entity.amount_paid / 100; // Convert from paise to INR
+
+      // Find the parking entry using the payment link ID
+      const parkingEntry = await Parking.findOne({ paymentLinkId });
+
+      if (!parkingEntry) {
+        return res.status(404).json({ message: "Parking entry not found" });
+      }
+
+      // Update the payment status and total amount in the database
+      parkingEntry.paymentStatus = "paid";
+      parkingEntry.totalAmount += paidAmount; // Use the amount from Razorpay webhook
+      await parkingEntry.save();
+
+      const message = `Thank you for your payment of ₹${paidAmount}. Your payment for vehicle ${parkingEntry.vehicleNo} has been successfully received.`;
+      await sendWhatsAppMessage(parkingEntry.phone, message);
+
+      console.log(
+        `Payment status updated for vehicle ${parkingEntry.vehicleNo}. Total Amount Paid: ₹${paidAmount}`
+      );
+
+      res.status(200).json({
+        message: "Payment status updated and total amount recorded.",
+        parkingEntry,
+      });
+    } else {
+      res.status(400).json({ message: "Unhandled event type" });
+    }
+  } catch (error) {
+    console.error("Error handling Razorpay webhook:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 const handlePayMessage = async (req, res) => {
   try {
+    console.log("entering handle");
     const { phone } = req.body;
 
     // Find the parking entry for the user
@@ -202,7 +244,7 @@ const handlePayMessage = async (req, res) => {
         .status(404)
         .json({ message: "No parking entry found for this user." });
     }
-
+    console.log(1);
     // Calculate total duration and extra duration
     const currentTime = new Date();
     const entryTime = new Date(parkingEntry.entryTime);
@@ -212,11 +254,11 @@ const handlePayMessage = async (req, res) => {
     const extraDuration = totalDuration - parkingEntry.parkingDuration;
 
     // Handle case where payment is pending but no extra charges apply
-    if (parkingEntry.paymentStatus === "pending" && extraDuration <= 0) {
-      return res.status(200).json({
-        message: "No extra charges. User just needs to pay the normal bill.",
-      });
-    }
+    // if (parkingEntry.paymentStatus === "pending" && extraDuration <= 0) {
+    //   return res.status(200).json({
+    //     message: "No extra charges. User just needs to pay the normal bill.",
+    //   });
+    // }
 
     // Calculate charges
     const normalBill = parkingEntry.parkingDuration * 50; // 50 INR per hour
@@ -232,13 +274,14 @@ const handlePayMessage = async (req, res) => {
         .status(200)
         .json({ message: "No extra charges. User has already paid." });
     }
-
+    console.log(2);
     // Generate a new payment link
     const timeLeft = Math.max(
       0,
       (entryTime.getTime() + totalDuration * 60 * 60 * 1000 - currentTime) /
         (1000 * 60 * 60)
     ); // Time left in hours
+    console.log(3);
     const paymentLink = await generatePaymentLink(
       totalAmount,
       parkingEntry.phone,
@@ -246,7 +289,9 @@ const handlePayMessage = async (req, res) => {
       timeLeft
     );
 
+    //Update the database with the new payment link ID
     parkingEntry.paymentLinkId = paymentLink.id;
+    parkingEntry.paymentStatus = "pending";
     await parkingEntry.save();
 
     // Send WhatsApp message with the new payment link
@@ -255,9 +300,9 @@ const handlePayMessage = async (req, res) => {
         ? `You have stayed beyond your booked duration. Vehicle No: ${parkingEntry.vehicleNo}. Extra Duration: ${extraDuration} hours. Extra Charges: ₹${extraCharges}. Please complete your payment here: ${paymentLink.short_url}`
         : `Your updated parking bill is ready. Vehicle No: ${parkingEntry.vehicleNo}. Total Amount: ₹${totalAmount}. Please complete your payment here: ${paymentLink.short_url}`;
     await sendWhatsAppMessage(parkingEntry.phone, message);
-
+    console.log("exiting handle");
     res.status(200).json({
-      message: "New payment link sent to the user.",
+      message: "New payment link sent to the user and updated in the database.",
       paymentLink,
     });
   } catch (err) {
