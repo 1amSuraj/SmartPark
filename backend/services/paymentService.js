@@ -1,8 +1,11 @@
 const Razorpay = require("razorpay");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 const razorpay = new Razorpay({
-  key_id: "rzp_test_Bc8f72xPSPBani", // Replace with your Razorpay Key ID
-  key_secret: "wpxM5PmoTMRa9j8d2tOzOc27", // Replace with your Razorpay Key Secret
+  key_id: process.env.RAZORPAY_KEY_ID, // Replace with your Razorpay Key ID
+  key_secret: process.env.RAZORPAY_KEY_SECRET, // Replace with your Razorpay Key Secret
 });
 
 const generatePaymentLink = async (

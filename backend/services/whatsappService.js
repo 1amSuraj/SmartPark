@@ -1,10 +1,13 @@
 const axios = require("axios");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 const sendWhatsAppMessage = async (destination, message) => {
   const encodedParams = new URLSearchParams();
   encodedParams.set("message", JSON.stringify({ text: message, type: "text" }));
   encodedParams.set("channel", "whatsapp");
-  encodedParams.set("source", "917834811114");
+  encodedParams.set("source", process.env.GUPSHUP_SOURCE_NUMBER);
   encodedParams.set("destination", destination);
   encodedParams.set("src.name", "ParkingAutomation");
   encodedParams.set("disablePreview", "false");
@@ -16,7 +19,7 @@ const sendWhatsAppMessage = async (destination, message) => {
     headers: {
       accept: "application/json",
       "Content-Type": "application/x-www-form-urlencoded",
-      apikey: "sk_991075e2558b407ba0b27acf32c54cdf",
+      apikey: process.env.GUPSHUP_API_KEY,
     },
     data: encodedParams,
   };
