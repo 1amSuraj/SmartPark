@@ -206,7 +206,7 @@ const handlePaymentWebhook = async (req, res) => {
       if (!parkingEntry) {
         return res.status(404).json({ message: "Parking entry not found" });
       }
-
+      parkingEntry.firstPayment = true;
       // Update the payment status and total amount in the database
       parkingEntry.paymentStatus = "paid";
       parkingEntry.totalAmount += paidAmount; // Use the amount from Razorpay webhook
@@ -244,7 +244,6 @@ const handlePayMessage = async (req, res) => {
         .status(404)
         .json({ message: "No parking entry found for this user." });
     }
-    console.log(1);
     // Calculate total duration and extra duration
     const currentTime = new Date();
     const entryTime = new Date(parkingEntry.entryTime);
@@ -262,9 +261,12 @@ const handlePayMessage = async (req, res) => {
 
     // Calculate charges
     const normalBill = parkingEntry.parkingDuration * 50; // 50 INR per hour
+
     const extraCharges = extraDuration > 0 ? extraDuration * 70 : 0; // 70 INR per extra hour
+    // parkingEntry.firstPayment = true;
+
     const totalAmount =
-      parkingEntry.paymentStatus === "paid"
+      parkingEntry.firstPayment === true
         ? extraCharges
         : normalBill + extraCharges;
 
@@ -274,14 +276,16 @@ const handlePayMessage = async (req, res) => {
         .status(200)
         .json({ message: "No extra charges. User has already paid." });
     }
-    console.log(2);
+
     // Generate a new payment link
-    const timeLeft = Math.max(
+    let timeLeft = Math.max(
       0,
       (entryTime.getTime() + totalDuration * 60 * 60 * 1000 - currentTime) /
         (1000 * 60 * 60)
     ); // Time left in hours
-    console.log(3);
+
+    timeLeft = parseFloat(timeLeft.toFixed(2));
+
     const paymentLink = await generatePaymentLink(
       totalAmount,
       parkingEntry.phone,
@@ -296,11 +300,13 @@ const handlePayMessage = async (req, res) => {
 
     // Send WhatsApp message with the new payment link
     const message =
-      parkingEntry.paymentStatus === "paid"
+      parkingEntry.firstPayment === true
         ? `You have stayed beyond your booked duration. Vehicle No: ${parkingEntry.vehicleNo}. Extra Duration: ${extraDuration} hours. Extra Charges: ₹${extraCharges}. Please complete your payment here: ${paymentLink.short_url}`
         : `Your updated parking bill is ready. Vehicle No: ${parkingEntry.vehicleNo}. Total Amount: ₹${totalAmount}. Please complete your payment here: ${paymentLink.short_url}`;
     await sendWhatsAppMessage(parkingEntry.phone, message);
+
     console.log("exiting handle");
+
     res.status(200).json({
       message: "New payment link sent to the user and updated in the database.",
       paymentLink,

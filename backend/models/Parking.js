@@ -15,6 +15,7 @@ const parkingSchema = new mongoose.Schema({
   paymentLinkId: { type: String },
   totalAmount: { type: Number, default: 0 }, // New field to store the total amount
   notificationSent: { type: Boolean, default: false }, // New field to track if the notification has been sent
+  firstPayment: { type: Boolean, default: false },
 });
 
 module.exports = mongoose.model("Parking", parkingSchema);
