@@ -210,6 +210,8 @@ const handlePaymentWebhook = async (req, res) => {
       // Update the payment status and total amount in the database
       parkingEntry.paymentStatus = "paid";
       parkingEntry.totalAmount += paidAmount; // Use the amount from Razorpay webhook
+      parkingEntry.updatedDuration += parkingEntry.extraDuration;
+
       await parkingEntry.save();
 
       const message = `Thank you for your payment of ₹${paidAmount}. Your payment for vehicle ${parkingEntry.vehicleNo} has been successfully received.`;
@@ -250,14 +252,19 @@ const handlePayMessage = async (req, res) => {
     const totalDuration = Math.ceil(
       (currentTime - entryTime) / (1000 * 60 * 60)
     ); // Convert milliseconds to hours
-    const extraDuration = totalDuration - parkingEntry.parkingDuration;
+    const extraDuration = totalDuration - parkingEntry.updatedDuration;
+    console.log(extraDuration);
+    console.log(totalDuration);
+    console.log(parkingEntry.parkingDuration);
+
+    console.log(parkingEntry.updatedDuration);
 
     // Handle case where payment is pending but no extra charges apply
-    // if (parkingEntry.paymentStatus === "pending" && extraDuration <= 0) {
-    //   return res.status(200).json({
-    //     message: "No extra charges. User just needs to pay the normal bill.",
-    //   });
-    // }
+    if (parkingEntry.paymentStatus === "pending" && extraDuration <= 0) {
+      return res.status(200).json({
+        message: "No extra charges. User just needs to pay the normal bill.",
+      });
+    }
 
     // Calculate charges
     const normalBill = parkingEntry.parkingDuration * 50; // 50 INR per hour
@@ -290,12 +297,13 @@ const handlePayMessage = async (req, res) => {
       totalAmount,
       parkingEntry.phone,
       parkingEntry.vehicleNo,
-      timeLeft
+      1
     );
 
     //Update the database with the new payment link ID
     parkingEntry.paymentLinkId = paymentLink.id;
     parkingEntry.paymentStatus = "pending";
+    parkingEntry.extraDuration = extraDuration;
     await parkingEntry.save();
 
     // Send WhatsApp message with the new payment link
