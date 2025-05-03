@@ -10,7 +10,7 @@ export default function Home() {
         <div className="flex  mt-20 h-55">
           <div className="flex mx-auto space-x-20 text-white ">
             <div
-              className="bg-red-500/20 backdrop-blur-md border border-red-500/30 rounded-xl p-4 shadow-lg"
+              className=" hover:text-tahiti border-8 border-white hover:border-bermuda shadow-2xl  cursor-pointer text-5xl border rounded-2xl w-80 flex items-center justify-center  bg-tahiti hover:bg-temer transition-all duration-300"
               onClick={() => {
                 router.push("/create");
               }}

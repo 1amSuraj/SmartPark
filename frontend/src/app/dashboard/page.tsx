@@ -12,7 +12,7 @@ export default function page() {
       <div className="flex w-full mt-32 h-40 items-center bg-white text-black">
         <div className="mx-auto flex space-x-10 bg-yellow-300">
           <div
-            className="bg-red-500/20 backdrop-blur-md border border-red-500/30 rounded-xl p-4 shadow-lg"
+            className="bg-stone-300 p-5 w-50 text-center cursor-pointer hover:bg-stone-500 transition-all duration-300"
             onClick={doit}
           >
             CREATE

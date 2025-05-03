@@ -9,70 +9,48 @@ const Page = () => {
 
   return (
     <>
-      {/* Header */}
-      <header className="bg-gradient-to-r from-blue-600 to-blue-800 text-white text-7xl text-center py-10 shadow-lg">
+      <h1 className="bg-purple-300 text-black text-7xl text-center p-10">
         Suraj's Parking
-      </header>
-
-      {/* Form Section */}
-      <main className="bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 min-h-screen flex items-center justify-center text-black">
-        <form className="space-y-8 p-10 bg-white rounded-2xl shadow-2xl w-[500px] border border-gray-300">
-          {/* Form Title */}
-          <h2 className="text-4xl font-extrabold text-center mb-6 text-gray-800">
-            Create Parking Entry
-          </h2>
-
+      </h1>
+      <div className="bg-purple-300 min-h-screen flex items-center justify-center text-black">
+        <form className="space-y-6 p-8 bg-white rounded-xl shadow-lg">
           {/* Car Number */}
-          <div className="flex flex-col gap-2">
-            <label className="text-lg font-semibold text-gray-700">
-              Car Number
-            </label>
+          <div className="flex items-center gap-6">
+            <label className="text-2xl w-48">Car Number</label>
             <input
               type="text"
               value={carNumber}
               onChange={(e) => setCarNumber(e.target.value)}
-              placeholder="Enter your car number (e.g., ABC1234)"
-              className="text-lg bg-gray-100 border border-gray-400 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500"
+              placeholder="Enter Car Number"
+              className="text-xl border border-black text-center rounded-xl px-4 py-2 w-full"
             />
           </div>
 
           {/* Phone Number */}
-          <div className="flex flex-col gap-2">
-            <label className="text-lg font-semibold text-gray-700">
-              Phone Number
-            </label>
+          <div className="flex items-center gap-6">
+            <label className="text-2xl w-48">Phone Number</label>
             <input
               type="tel"
               value={phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value)}
-              placeholder="Enter your phone number"
-              className="text-lg bg-gray-100 border border-gray-400 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500"
+              placeholder="Enter Phone Number"
+              className="text-xl border border-black text-center rounded-xl px-4 py-2 w-full"
             />
           </div>
 
           {/* Duration */}
-          <div className="flex flex-col gap-2">
-            <label className="text-lg font-semibold text-gray-700">
-              Duration (in hours)
-            </label>
+          <div className="flex items-center gap-6">
+            <label className="text-2xl w-48">Duration</label>
             <input
-              type="number"
+              type="text"
               value={duration}
               onChange={(e) => setDuration(e.target.value)}
-              placeholder="Enter parking duration (e.g., 2)"
-              className="text-lg bg-gray-100 border border-gray-400 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500"
+              placeholder="Enter Duration"
+              className="text-xl border border-black text-center rounded-xl px-4 py-2 w-full"
             />
           </div>
-
-          {/* Submit Button */}
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white text-lg font-semibold py-3 rounded-lg hover:bg-blue-700 hover:shadow-lg transition-all duration-300"
-          >
-            Submit
-          </button>
         </form>
-      </main>
+      </div>
     </>
   );
 };
