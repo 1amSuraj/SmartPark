@@ -1,16 +1,43 @@
 "use client";
 
 import React, { useState } from "react";
+import axios from "axios";
 
 const Page = () => {
   const [carNumber, setCarNumber] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [duration, setDuration] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({ carNumber, phoneNumber, duration });
-    // Connect API call here
+
+    const payload = {
+      carNumber,
+      phoneNumber,
+      duration,
+    };
+
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/parking/`,
+        payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 201) {
+        alert("Entry created successfully!");
+        console.log("Response:", response.data);
+      } else {
+        alert("Failed to create entry.");
+      }
+    } catch (error) {
+      console.error("Error creating entry:", error);
+      alert("An error occurred while creating the entry.");
+    }
   };
 
   return (
