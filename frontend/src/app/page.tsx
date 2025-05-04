@@ -7,16 +7,16 @@ export default function Home() {
   const buttons = [
     { label: "Create", route: "/create" },
     { label: "View", route: "/view" },
-    { label: "Payment", route: "/payments" },
+    { label: "Payment", route: "/payment" },
   ];
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-purple-400 to-purple-600 text-white flex flex-col items-center justify-center px-4">
+    <main className="min-h-screen bg-neutral-900 text-white flex flex-col items-center justify-center px-4">
       <div className="text-center mb-16">
-        <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight">
+        <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight text-purple-400">
           Suraj's
         </h1>
-        <h2 className="text-4xl sm:text-5xl md:text-6xl font-semibold mt-2">
+        <h2 className="text-4xl sm:text-5xl md:text-6xl font-semibold mt-2 text-purple-100">
           Parking System
         </h2>
       </div>
@@ -26,7 +26,7 @@ export default function Home() {
           <button
             key={btn.label}
             onClick={() => router.push(btn.route)}
-            className="bg-white text-purple-700 hover:bg-purple-100 hover:scale-105 transition-transform duration-300 font-semibold text-2xl py-6 rounded-2xl shadow-lg border-4 border-white"
+            className="bg-neutral-800 hover:bg-neutral-700 text-white hover:text-purple-300 transition-transform transform hover:scale-105 duration-300 font-semibold text-2xl py-6 rounded-2xl shadow-xl border border-purple-600"
           >
             {btn.label}
           </button>

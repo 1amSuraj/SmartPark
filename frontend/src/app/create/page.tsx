@@ -10,66 +10,79 @@ const Page = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log({ carNumber, phoneNumber, duration });
-    // Add API integration or logic here
+    // Connect API call here
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-purple-400 to-purple-600 text-white px-4 py-10 flex flex-col items-center">
-      <h1 className="text-5xl font-bold mb-4">Suraj's Parking</h1>
-      <p className="text-xl mb-10 text-purple-100">Create Vehicle Entry</p>
+    <main className="min-h-screen bg-neutral-900 text-white px-6 py-12 flex flex-col items-center">
+      <h1 className="text-4xl md:text-5xl font-bold mb-3 text-center">
+        Suraj's Parking Control Panel
+      </h1>
+      <p className="text-md text-neutral-400 mb-10 text-center">
+        Record a new vehicle entry
+      </p>
 
-      <div className="bg-white rounded-3xl shadow-2xl max-w-3xl w-full p-10 space-y-10 text-black">
+      <form
+        onSubmit={handleSubmit}
+        className="w-full max-w-4xl bg-neutral-800 rounded-2xl shadow-xl p-10 space-y-8"
+      >
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="flex flex-col items-start">
-            <span className="text-xl font-semibold mb-2">🚗 Car Number</span>
-            <div className="bg-purple-100 px-4 py-3 rounded-xl w-full">
-              <input
-                type="text"
-                value={carNumber}
-                onChange={(e) => setCarNumber(e.target.value)}
-                placeholder="Enter number"
-                className="bg-transparent w-full outline-none text-lg"
-              />
-            </div>
+          {/* Car Number */}
+          <div className="flex flex-col">
+            <label className="text-sm font-medium text-neutral-300 mb-1">
+              Car Number
+            </label>
+            <input
+              type="text"
+              value={carNumber}
+              onChange={(e) => setCarNumber(e.target.value)}
+              placeholder="DL3CAF1234"
+              className="bg-neutral-700 text-white px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-grey-400"
+              required
+            />
           </div>
 
-          <div className="flex flex-col items-start">
-            <span className="text-xl font-semibold mb-2">📱 Phone</span>
-            <div className="bg-purple-100 px-4 py-3 rounded-xl w-full">
-              <input
-                type="tel"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-                placeholder="Enter phone"
-                className="bg-transparent w-full outline-none text-lg"
-              />
-            </div>
+          {/* Phone Number */}
+          <div className="flex flex-col">
+            <label className="text-sm font-medium text-neutral-300 mb-1">
+              Phone Number
+            </label>
+            <input
+              type="tel"
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
+              placeholder="9876543210"
+              className="bg-neutral-700 text-white px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-grey-400"
+              required
+            />
           </div>
 
-          <div className="flex flex-col items-start">
-            <span className="text-xl font-semibold mb-2">⏱ Duration (hrs)</span>
-            <div className="bg-purple-100 px-4 py-3 rounded-xl w-full">
-              <input
-                type="number"
-                min={0}
-                value={duration}
-                onChange={(e) => setDuration(e.target.value)}
-                placeholder="e.g., 2"
-                className="bg-transparent w-full outline-none text-lg"
-              />
-            </div>
+          {/* Duration */}
+          <div className="flex flex-col">
+            <label className="text-sm font-medium text-neutral-300 mb-1">
+              Duration (hours)
+            </label>
+            <input
+              type="number"
+              min={0}
+              value={duration}
+              onChange={(e) => setDuration(e.target.value)}
+              placeholder="e.g., 2"
+              className="bg-neutral-700 text-white px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-grey-400"
+              required
+            />
           </div>
         </div>
 
-        <div className="flex justify-center pt-4">
+        <div className="flex justify-end">
           <button
-            onClick={handleSubmit}
-            className="bg-purple-600 hover:bg-purple-700 text-white text-xl font-semibold px-8 py-3 rounded-xl transition duration-300"
+            type="submit"
+            className="bg-neutral-700 hover:bg-neutral-600 px-6 py-3 rounded-lg font-semibold text-white shadow-lg transition duration-300"
           >
             Submit Entry
           </button>
         </div>
-      </div>
+      </form>
     </main>
   );
 };
