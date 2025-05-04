@@ -4,22 +4,29 @@ import React, { useState } from "react";
 import axios from "axios";
 
 const Page = () => {
-  const [carNumber, setCarNumber] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [duration, setDuration] = useState("");
+  const [vehicleNo, setVehicleNo] = useState("");
+  const [vehicleType, setVehicleType] = useState("Car");
+  const [phone, setPhone] = useState("");
+  const [parkingDuration, setParkingDuration] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     const payload = {
-      carNumber,
-      phoneNumber,
-      duration,
+      vehicleNo,
+      vehicleType,
+      phone,
+      parkingDuration,
     };
+    console.log(
+      payload.vehicleNo,
+      payload.vehicleType,
+      payload.phone,
+      payload.parkingDuration
+    );
 
     try {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/parking/`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/parking`,
         payload,
         {
           headers: {
@@ -53,7 +60,7 @@ const Page = () => {
         onSubmit={handleSubmit}
         className="w-full max-w-4xl bg-neutral-800 rounded-2xl shadow-xl p-10 space-y-8"
       >
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           {/* Car Number */}
           <div className="flex flex-col">
             <label className="text-sm font-medium text-neutral-300 mb-1">
@@ -61,12 +68,29 @@ const Page = () => {
             </label>
             <input
               type="text"
-              value={carNumber}
-              onChange={(e) => setCarNumber(e.target.value)}
+              value={vehicleNo}
+              onChange={(e) => setVehicleNo(e.target.value)}
               placeholder="DL3CAF1234"
               className="bg-neutral-700 text-white px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-grey-400"
               required
             />
+          </div>
+
+          {/* Vehicle Type */}
+          <div className="flex flex-col">
+            <label className="text-sm font-medium text-neutral-300 mb-1">
+              Vehicle Type
+            </label>
+            <select
+              value={vehicleType}
+              onChange={(e) => setVehicleType(e.target.value)}
+              className="bg-neutral-700 text-white px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-grey-400"
+              required
+            >
+              <option value="Car">Car</option>
+              <option value="Bike">Bike</option>
+              <option value="Truck">Truck</option>
+            </select>
           </div>
 
           {/* Phone Number */}
@@ -76,8 +100,8 @@ const Page = () => {
             </label>
             <input
               type="tel"
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
               placeholder="9876543210"
               className="bg-neutral-700 text-white px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-grey-400"
               required
@@ -92,8 +116,8 @@ const Page = () => {
             <input
               type="number"
               min={0}
-              value={duration}
-              onChange={(e) => setDuration(e.target.value)}
+              value={parkingDuration}
+              onChange={(e) => setParkingDuration(e.target.value)}
               placeholder="e.g., 2"
               className="bg-neutral-700 text-white px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-grey-400"
               required
