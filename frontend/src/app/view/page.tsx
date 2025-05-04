@@ -84,7 +84,7 @@ const View = () => {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-purple-400 to-purple-600 text-white px-4 py-10 flex flex-col items-center">
-      <h1 className="text-5xl font-bold mb-3">🅿️ Parking Dashboard</h1>
+      <h1 className="text-5xl font-bold mb-3"> Parking Dashboard</h1>
       <p className="text-md text-purple-100 mb-6">Auto-refresh every 30s</p>
 
       {/* Search + Sort + Filter */}
