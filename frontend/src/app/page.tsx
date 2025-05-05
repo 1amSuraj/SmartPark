@@ -26,7 +26,7 @@ export default function Home() {
           <button
             key={btn.label}
             onClick={() => router.push(btn.route)}
-            className="bg-neutral-800 hover:bg-neutral-700 text-white hover:text-purple-300 transition-transform transform hover:scale-105 duration-300 font-semibold text-2xl py-6 rounded-2xl shadow-xl border border-purple-600"
+            className="bg-neutral-800 hover:bg-black/20 text-white hover:text-purple-300 transition-transform transform hover:scale-105 duration-300 font-semibold text-2xl py-6 rounded-2xl shadow-xl border border-purple-600"
           >
             {btn.label}
           </button>
