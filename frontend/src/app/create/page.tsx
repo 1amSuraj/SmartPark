@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // Import Toastify CSS
 
 const Page = () => {
   const [vehicleNo, setVehicleNo] = useState("");
@@ -17,12 +19,6 @@ const Page = () => {
       phone,
       parkingDuration,
     };
-    console.log(
-      payload.vehicleNo,
-      payload.vehicleType,
-      payload.phone,
-      payload.parkingDuration
-    );
 
     try {
       const response = await axios.post(
@@ -36,26 +32,50 @@ const Page = () => {
       );
 
       if (response.status === 201) {
-        alert("Entry created successfully!");
+        toast.success("Entry created successfully!", {
+          position: "top-right",
+          autoClose: 3000, // Close after 3 seconds
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
         console.log("Response:", response.data);
       } else {
-        alert("Failed to create entry.");
+        toast.error("Failed to create entry.", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
     } catch (error) {
       console.error("Error creating entry:", error);
-      alert("An error occurred while creating the entry.");
+      toast.error("An error occurred while creating the entry.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
 
   return (
     <main className="min-h-screen bg-neutral-900 text-white px-6 py-12 flex flex-col items-center">
+      <ToastContainer /> {/* Add ToastContainer to render notifications */}
       <h1 className="text-4xl md:text-5xl font-bold mb-3 text-center">
         Suraj's Parking Control Panel
       </h1>
       <p className="text-md text-neutral-400 mb-10 text-center">
         Record a new vehicle entry
       </p>
-
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-4xl bg-neutral-800 rounded-2xl shadow-xl p-10 space-y-8"

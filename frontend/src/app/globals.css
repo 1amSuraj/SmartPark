@@ -28,3 +28,20 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Success Notification */
+.Toastify__toast--success {
+  background-color: oklch(37.1% 0 0) !important; /* Green background */
+  color: white !important; /* White text */
+}
+
+/* Error Notification */
+.Toastify__toast--error {
+  background-color: #dc2626 !important; /* Red background */
+  color: white !important; /* White text */
+}
+
+/* Customize the progress bar */
+.Toastify__progress-bar {
+  background-color: white !important; /* White progress bar */
+}
