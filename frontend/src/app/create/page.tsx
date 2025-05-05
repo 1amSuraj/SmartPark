@@ -47,6 +47,12 @@ const Page = () => {
           progress: undefined,
         });
         console.log("Response:", response.data);
+
+        // Reset the form fields
+        setVehicleNo("");
+        setVehicleType("Car");
+        setPhone("");
+        setParkingDuration("");
       } else {
         toast.error("Failed to create entry.", {
           position: "top-right",
