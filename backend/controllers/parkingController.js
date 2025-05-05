@@ -354,9 +354,20 @@ const handleGupshupWebhook = async (req, res) => {
   }
 };
 
+const getAllParkingEntries = async (req, res) => {
+  try {
+    const entries = await Parking.find(); // Fetch all parking entries
+    res.status(200).json(entries);
+  } catch (err) {
+    console.error("Error fetching parking entries:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 module.exports = {
   createParkingEntry,
   handlePaymentWebhook,
   handlePayMessage,
   handleGupshupWebhook,
+  getAllParkingEntries,
 };
