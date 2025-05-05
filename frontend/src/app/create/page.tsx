@@ -12,9 +12,12 @@ const Page = () => {
   const [vehicleType, setVehicleType] = useState("Car");
   const [phone, setPhone] = useState("");
   const [parkingDuration, setParkingDuration] = useState("");
+  const [loading, setLoading] = useState(false); // State to track loading
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true); // Set loading to true when the form is submitted
+
     const payload = {
       vehicleNo,
       vehicleType,
@@ -66,6 +69,8 @@ const Page = () => {
         draggable: true,
         progress: undefined,
       });
+    } finally {
+      setLoading(false); // Set loading to false after the API call is complete
     }
   };
 
@@ -156,9 +161,38 @@ const Page = () => {
         <div className="flex justify-end">
           <button
             type="submit"
-            className="bg-neutral-700 hover:bg-neutral-600 px-6 py-3 rounded-lg font-semibold text-white shadow-lg transition duration-300"
+            disabled={loading} // Disable the button while loading
+            className={`px-6 py-3 rounded-lg font-semibold text-white shadow-lg transition duration-300 w-1/5 ${
+              loading
+                ? "bg-neutral-600 cursor-not-allowed"
+                : "bg-neutral-700 hover:bg-neutral-600"
+            }`}
           >
-            Submit Entry
+            {loading ? (
+              <svg
+                className="animate-spin h-5 w-full text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+            ) : (
+              "Submit Entry"
+            )}{" "}
+            {/* Show loading text */}
           </button>
         </div>
       </form>
