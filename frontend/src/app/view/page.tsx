@@ -192,30 +192,30 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 
-const fetchParkingData = async () => {
-  return [
-    {
-      vehicleNo: "DL3CAF1234",
-      vehicleType: "Car",
-      phone: "9876543210",
-      parkingDuration: 2,
-      extraDuration: 1,
-      entryTime: "2025-05-02T10:30:00Z",
-      paymentStatus: "paid",
-      totalAmount: 150,
-    },
-    {
-      vehicleNo: "MH12DE4567",
-      vehicleType: "Bike",
-      phone: "9123456789",
-      parkingDuration: 4,
-      extraDuration: 0,
-      entryTime: "2025-05-02T08:00:00Z",
-      paymentStatus: "pending",
-      totalAmount: 80,
-    },
-  ];
+// Define the type for parking entries
+type ParkingEntry = {
+  vehicleNo: string;
+  vehicleType: string;
+  phone: string;
+  parkingDuration: number;
+  extraDuration: number;
+  entryTime: string;
+  paymentStatus: string;
+  totalAmount: number;
+};
+
+const fetchParkingData = async (): Promise<ParkingEntry[]> => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/parking`
+    );
+    return response.data; // Return the fetched data
+  } catch (error) {
+    console.error("Error fetching parking data:", error);
+    return [];
+  }
 };
 
 const formatTime = (timeString: string) => {
@@ -224,9 +224,9 @@ const formatTime = (timeString: string) => {
 };
 
 const View = () => {
-  const [entries, setEntries] = useState([]);
+  const [entries, setEntries] = useState<ParkingEntry[]>([]);
   const [search, setSearch] = useState("");
-  const [filtered, setFiltered] = useState([]);
+  const [filtered, setFiltered] = useState<ParkingEntry[]>([]);
   const [filterStatus, setFilterStatus] = useState("all");
   const [sortKey, setSortKey] = useState("entryTime");
 
@@ -237,7 +237,7 @@ const View = () => {
 
   useEffect(() => {
     loadData();
-    const interval = setInterval(loadData, 30000);
+    const interval = setInterval(loadData, 30000); // Auto-refresh every 30 seconds
     return () => clearInterval(interval);
   }, []);
 
@@ -259,7 +259,9 @@ const View = () => {
 
     data.sort((a, b) => {
       if (sortKey === "entryTime") {
-        return new Date(b.entryTime) - new Date(a.entryTime);
+        return (
+          new Date(b.entryTime).getTime() - new Date(a.entryTime).getTime()
+        );
       } else if (sortKey === "amount") {
         return b.totalAmount - a.totalAmount;
       } else if (sortKey === "status") {
