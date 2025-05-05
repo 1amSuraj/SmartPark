@@ -2,46 +2,38 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
+import axios from "axios";
 
-const COLORS = ["#22c55e", "#ef4444"];
-
-const fetchParkingData = async () => {
-  return [
-    {
-      vehicleNo: "DL3CAF1234",
-      vehicleType: "Car",
-      phone: "9876543210",
-      parkingDuration: 2,
-      extraDuration: 1,
-      entryTime: "2025-05-05T09:30:00Z",
-      paymentStatus: "paid",
-      totalAmount: 150,
-    },
-    {
-      vehicleNo: "MH12DE4567",
-      vehicleType: "Bike",
-      phone: "9123456789",
-      parkingDuration: 4,
-      extraDuration: 0,
-      entryTime: "2025-05-05T08:00:00Z",
-      paymentStatus: "pending",
-      totalAmount: 80,
-    },
-    {
-      vehicleNo: "KA05XY7890",
-      vehicleType: "Car",
-      phone: "9898989898",
-      parkingDuration: 1,
-      extraDuration: 1,
-      entryTime: "2025-04-30T10:00:00Z",
-      paymentStatus: "paid",
-      totalAmount: 120,
-    },
-  ];
+// Define the type for parking entries
+type ParkingEntry = {
+  vehicleNo: string;
+  vehicleType: string;
+  phone: string;
+  parkingDuration: number;
+  extraDuration: number;
+  entryTime: string;
+  paymentStatus: string;
+  totalAmount: number;
 };
 
+// Define colors for the pie chart
+const COLORS = ["#22c55e", "#ef4444"];
+
+// Fetch parking data from the backend
+const fetchParkingData = async (): Promise<ParkingEntry[]> => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/parking`
+    );
+    return response.data; // Return the fetched data
+  } catch (error) {
+    console.error("Error fetching parking data:", error);
+    return [];
+  }
+};
+
+// Helper function to check if a date is today
 const isToday = (dateStr: string) => {
   const today = new Date();
   const date = new Date(dateStr);
@@ -54,16 +46,23 @@ const isToday = (dateStr: string) => {
 
 const Payment = () => {
   const router = useRouter();
-  const [entries, setEntries] = useState([]);
+  const [entries, setEntries] = useState<ParkingEntry[]>([]);
 
+  // Fetch data initially and every 30 seconds
   useEffect(() => {
     const load = async () => {
       const data = await fetchParkingData();
       setEntries(data);
     };
-    load();
+
+    load(); // Fetch data initially
+
+    const interval = setInterval(load, 30000); // Fetch data every 30 seconds
+
+    return () => clearInterval(interval); // Cleanup interval on component unmount
   }, []);
 
+  // Filter and calculate data
   const paidToday = entries.filter(
     (e) => isToday(e.entryTime) && e.paymentStatus === "paid"
   );
@@ -93,12 +92,15 @@ const Payment = () => {
 
   return (
     <main className="min-h-screen bg-neutral-900 text-white px-4 py-10 flex flex-col items-center">
+      {/* Back Button */}
       <button
         onClick={() => router.push("/")} // Navigate back to the main page
         className="absolute top-6 left-6 bg-neutral-700 hover:bg-neutral-600 px-4 py-2 rounded-lg font-semibold text-white shadow-lg transition duration-300"
       >
         Back
       </button>
+
+      {/* Header */}
       <h1 className="text-4xl font-bold mb-2 text-white">Payment Dashboard</h1>
       <p className="text-sm mb-10 text-white">
         All figures based on current data
