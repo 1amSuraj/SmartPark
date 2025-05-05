@@ -14,17 +14,26 @@ const Page = () => {
   const [parkingDuration, setParkingDuration] = useState("");
   const [loading, setLoading] = useState(false); // State to track loading
 
+  // Function to format the phone number
+  const formatPhoneNumber = (phone: string): string => {
+    if (phone.startsWith("91")) {
+      return phone;
+    }
+    return `91${phone}`;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true); // Set loading to true when the form is submitted
 
+    // Format the phone number before submitting
+    const formattedPhone = formatPhoneNumber(phone);
     const payload = {
       vehicleNo,
       vehicleType,
-      phone,
+      phone: formattedPhone, // Use the formatted phone number
       parkingDuration,
     };
-
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/parking`,
@@ -35,7 +44,6 @@ const Page = () => {
           },
         }
       );
-
       if (response.status === 201) {
         toast.success("Entry created successfully!", {
           position: "top-right",
@@ -197,8 +205,7 @@ const Page = () => {
               </svg>
             ) : (
               "Submit Entry"
-            )}{" "}
-            {/* Show loading text */}
+            )}
           </button>
         </div>
       </form>
