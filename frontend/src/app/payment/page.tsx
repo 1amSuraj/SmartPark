@@ -1,6 +1,8 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 
 const COLORS = ["#22c55e", "#ef4444"];
@@ -51,6 +53,7 @@ const isToday = (dateStr: string) => {
 };
 
 const Payment = () => {
+  const router = useRouter();
   const [entries, setEntries] = useState([]);
 
   useEffect(() => {
@@ -90,6 +93,12 @@ const Payment = () => {
 
   return (
     <main className="min-h-screen bg-neutral-900 text-white px-4 py-10 flex flex-col items-center">
+      <button
+        onClick={() => router.push("/")} // Navigate back to the main page
+        className="absolute top-6 left-6 bg-neutral-700 hover:bg-neutral-600 px-4 py-2 rounded-lg font-semibold text-white shadow-lg transition duration-300"
+      >
+        Back
+      </button>
       <h1 className="text-4xl font-bold mb-2 text-white">Payment Dashboard</h1>
       <p className="text-sm mb-10 text-white">
         All figures based on current data

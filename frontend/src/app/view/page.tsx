@@ -193,6 +193,7 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 // Define the type for parking entries
 type ParkingEntry = {
@@ -224,6 +225,7 @@ const formatTime = (timeString: string) => {
 };
 
 const View = () => {
+  const router = useRouter();
   const [entries, setEntries] = useState<ParkingEntry[]>([]);
   const [search, setSearch] = useState("");
   const [filtered, setFiltered] = useState<ParkingEntry[]>([]);
@@ -275,6 +277,12 @@ const View = () => {
 
   return (
     <main className="min-h-screen bg-neutral-900 text-white px-6 py-12">
+      <button
+        onClick={() => router.push("/")} // Navigate back to the main page
+        className="absolute top-6 left-6 bg-neutral-700 hover:bg-neutral-600 px-4 py-2 rounded-lg font-semibold text-white shadow-lg transition duration-300"
+      >
+        Back
+      </button>
       <h1 className="text-4xl font-bold mb-2 text-center">Parking Logs</h1>
       <p className="text-sm text-neutral-400 mb-10 text-center">
         Updated every 30 seconds

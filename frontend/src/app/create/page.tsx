@@ -1,11 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import Toastify CSS
 
 const Page = () => {
+  const router = useRouter();
   const [vehicleNo, setVehicleNo] = useState("");
   const [vehicleType, setVehicleType] = useState("Car");
   const [phone, setPhone] = useState("");
@@ -69,6 +71,12 @@ const Page = () => {
 
   return (
     <main className="min-h-screen bg-neutral-900 text-white px-6 py-12 flex flex-col items-center">
+      <button
+        onClick={() => router.push("/")} // Navigate back to the main page
+        className="absolute top-6 left-6 bg-neutral-700 hover:bg-neutral-600 px-4 py-2 rounded-lg font-semibold text-white shadow-lg transition duration-300"
+      >
+        Back
+      </button>
       <ToastContainer /> {/* Add ToastContainer to render notifications */}
       <h1 className="text-4xl md:text-5xl font-bold mb-3 text-center">
         Suraj's Parking Control Panel
