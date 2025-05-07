@@ -181,8 +181,8 @@ const View = () => {
                   {entry.extraDuration} hrs
                 </p>
                 <p>
-                  <span className="text-neutral-400">Total Amount Paid :</span>{" "}
-                  ₹{entry.totalAmount}
+                  <span className="text-neutral-400">Total Amount Paid:</span> ₹
+                  {entry.totalAmount}
                 </p>
               </div>
             </div>
