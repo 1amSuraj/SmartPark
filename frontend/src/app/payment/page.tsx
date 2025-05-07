@@ -95,7 +95,7 @@ const Payment = () => {
       {/* Back Button */}
       <button
         onClick={() => router.push("/")} // Navigate back to the main page
-        className="absolute top-6 left-6 bg-neutral-700 hover:bg-neutral-600 px-4 py-2 rounded-lg font-semibold text-white shadow-lg transition duration-300"
+        className="absolute top-6 left-6 bg-neutral-700 hover:bg-neutral-600 px-4 py-2 rounded-lg font-semibold text-white shadow-lg transition duration-300 cursor-pointer"
       >
         Back
       </button>

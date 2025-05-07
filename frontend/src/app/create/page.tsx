@@ -13,6 +13,7 @@ const Page = () => {
   const [phone, setPhone] = useState("");
   const [parkingDuration, setParkingDuration] = useState("");
   const [loading, setLoading] = useState(false); // State to track loading
+  const [scanning, setScanning] = useState(false); // for scan button
 
   // Function to format the phone number
   const formatPhoneNumber = (phone: string): string => {
@@ -88,11 +89,29 @@ const Page = () => {
     }
   };
 
+  const handlePlateScan = async () => {
+    setScanning(true);
+    try {
+      const res = await axios.get("http://127.0.0.1:5001/plate");
+      if (res.data.plate) {
+        setVehicleNo(res.data.plate.toUpperCase());
+        toast.success(`Plate Detected: ${res.data.plate.toUpperCase()}`);
+      } else {
+        toast.warning("No plate detected.");
+      }
+    } catch (err) {
+      console.error("Error detecting plate:", err);
+      toast.error("Number Plate not detected");
+    } finally {
+      setScanning(false);
+    }
+  };
+
   return (
     <main className="min-h-screen bg-neutral-900 text-white px-6 py-12 flex flex-col items-center">
       <button
         onClick={() => router.push("/")} // Navigate back to the main page
-        className="absolute top-6 left-6 bg-neutral-700 hover:bg-neutral-600 px-4 py-2 rounded-lg font-semibold text-white shadow-lg transition duration-300"
+        className="absolute top-6 left-6 bg-neutral-700 hover:bg-neutral-600 px-4 py-2 rounded-lg font-semibold text-white shadow-lg transition duration-300 cursor-pointer"
       >
         Back
       </button>
@@ -103,6 +122,19 @@ const Page = () => {
       <p className="text-md text-neutral-400 mb-10 text-center">
         Record a new vehicle entry
       </p>
+      {/* Scan Button */}
+      <button
+        type="button"
+        onClick={handlePlateScan}
+        disabled={scanning}
+        className={`mb-6 px-6 py-3 rounded-lg font-semibold text-white shadow-lg transition duration-300 w-1/5 cursor-pointer ${
+          scanning
+            ? "bg-neutral-700 cursor-not-allowed"
+            : "bg-neutral-700 hover:bg-neutral-600"
+        }`}
+      >
+        {scanning ? "Scanning..." : "Scan Plate Automatically"}
+      </button>
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-4xl bg-neutral-800 rounded-2xl shadow-xl p-10 space-y-8"
@@ -131,7 +163,7 @@ const Page = () => {
             <select
               value={vehicleType}
               onChange={(e) => setVehicleType(e.target.value)}
-              className="flex-1 bg-neutral-700 text-white px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-grey-400"
+              className="flex-1 bg-neutral-700 text-white px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-grey-400 cursor-pointer"
               required
             >
               <option value="Car">Car</option>
@@ -176,7 +208,7 @@ const Page = () => {
           <button
             type="submit"
             disabled={loading} // Disable the button while loading
-            className={`px-6 py-3 rounded-lg font-semibold text-white shadow-lg transition duration-300 w-1/5 ${
+            className={`px-6 py-3 cursor-pointer rounded-lg font-semibold text-white shadow-lg transition duration-300 w-1/5 ${
               loading
                 ? "bg-neutral-600 cursor-not-allowed"
                 : "bg-neutral-700 hover:bg-neutral-600"

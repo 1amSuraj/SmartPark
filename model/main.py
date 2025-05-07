@@ -34,9 +34,10 @@ while True:
                 headers={"Authorization": f"Token {TOKEN}"}
             )
         data = response.json()
-
+        
         if data.get("results"):
             plate = data["results"][0]["plate"]
+            stored_plate = plate
             print(f"[SUCCESS] Plate Detected: {plate.upper()}")
         else:
             print("[WARNING] No plate found.")

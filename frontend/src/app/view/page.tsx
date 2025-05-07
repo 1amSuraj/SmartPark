@@ -88,7 +88,7 @@ const View = () => {
     <main className="min-h-screen bg-neutral-900 text-white px-6 py-12">
       <button
         onClick={() => router.push("/")} // Navigate back to the main page
-        className="absolute top-6 left-6 bg-neutral-700 hover:bg-neutral-600 px-4 py-2 rounded-lg font-semibold text-white shadow-lg transition duration-300"
+        className="absolute top-6 left-6 bg-neutral-700 hover:bg-neutral-600 px-4 py-2 rounded-lg font-semibold text-white shadow-lg transition duration-300 cursor-pointer"
       >
         Back
       </button>
@@ -104,13 +104,13 @@ const View = () => {
           placeholder="Search by vehicle number or phone..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="bg-neutral-800 text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-300"
+          className="bg-neutral-800 text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-300 "
         />
 
         <select
           value={sortKey}
           onChange={(e) => setSortKey(e.target.value)}
-          className="bg-neutral-800 text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-300"
+          className="bg-neutral-800 text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-300 cursor-pointer"
         >
           <option value="entryTime">Sort by Entry Time</option>
           <option value="amount">Sort by Amount</option>
@@ -122,7 +122,7 @@ const View = () => {
             <button
               key={status}
               onClick={() => setFilterStatus(status)}
-              className={`px-4 py-2 rounded-lg font-medium w-full transition ${
+              className={`px-4 py-2 cursor-pointer rounded-lg font-medium w-full transition ${
                 filterStatus === status
                   ? "bg-neutral-300 text-black"
                   : "bg-neutral-700 text-neutral-300 hover:bg-neutral-600"
