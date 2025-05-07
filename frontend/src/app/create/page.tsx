@@ -124,14 +124,14 @@ const Page = () => {
           </div>
 
           {/* Vehicle Type */}
-          <div className="flex flex-col">
+          <div className="flex flex-col ">
             <label className="text-sm font-medium text-neutral-300 mb-1">
               Vehicle Type
             </label>
             <select
               value={vehicleType}
               onChange={(e) => setVehicleType(e.target.value)}
-              className="bg-neutral-700 text-white px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-grey-400"
+              className="flex-1 bg-neutral-700 text-white px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-grey-400"
               required
             >
               <option value="Car">Car</option>
