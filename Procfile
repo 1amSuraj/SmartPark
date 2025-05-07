@@ -1,0 +1,1 @@
+web: python plate_server.py

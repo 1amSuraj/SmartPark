@@ -6,3 +6,5 @@ opencv-python==4.11.0.86
 python-dotenv==1.1.0
 requests==2.32.3
 urllib3==2.4.0
+Flask==2.3.3
+Flask-Cors==3.0.10
