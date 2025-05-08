@@ -12,10 +12,9 @@ const Page = () => {
   const [vehicleType, setVehicleType] = useState("Car");
   const [phone, setPhone] = useState("");
   const [parkingDuration, setParkingDuration] = useState("");
-  const [loading, setLoading] = useState(false); // State to track loading
-  const [scanning, setScanning] = useState(false); // for scan button
+  const [loading, setLoading] = useState(false);
+  const [scanning, setScanning] = useState(false);
 
-  // Function to format the phone number
   const formatPhoneNumber = (phone: string): string => {
     if (phone.startsWith("91")) {
       return phone;
@@ -25,7 +24,7 @@ const Page = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true); // Set loading to true when the form is submitted
+    setLoading(true);
 
     // Format the phone number before submitting
     const formattedPhone = formatPhoneNumber(phone);
