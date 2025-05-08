@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
-// Define the type for parking entries
 type ParkingEntry = {
   vehicleNo: string;
   vehicleType: string;
@@ -87,7 +86,7 @@ const View = () => {
   return (
     <main className="min-h-screen bg-neutral-900 text-white px-6 py-12">
       <button
-        onClick={() => router.push("/")} // Navigate back to the main page
+        onClick={() => router.push("/")}
         className="absolute top-6 left-6 bg-neutral-700 hover:bg-neutral-600 px-4 py-2 rounded-lg font-semibold text-white shadow-lg transition duration-300 cursor-pointer"
       >
         Back

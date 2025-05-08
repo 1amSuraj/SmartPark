@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import axios from "axios";
 
-// Define the type for parking entries
 type ParkingEntry = {
   vehicleNo: string;
   vehicleType: string;
@@ -17,23 +16,20 @@ type ParkingEntry = {
   totalAmount: number;
 };
 
-// Define colors for the pie chart
 const COLORS = ["#22c55e", "#ef4444"];
 
-// Fetch parking data from the backend
 const fetchParkingData = async (): Promise<ParkingEntry[]> => {
   try {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/parking`
     );
-    return response.data; // Return the fetched data
+    return response.data;
   } catch (error) {
     console.error("Error fetching parking data:", error);
     return [];
   }
 };
 
-// Helper function to check if a date is today
 const isToday = (dateStr: string) => {
   const today = new Date();
   const date = new Date(dateStr);
@@ -48,21 +44,19 @@ const Payment = () => {
   const router = useRouter();
   const [entries, setEntries] = useState<ParkingEntry[]>([]);
 
-  // Fetch data initially and every 30 seconds
   useEffect(() => {
     const load = async () => {
       const data = await fetchParkingData();
       setEntries(data);
     };
 
-    load(); // Fetch data initially
+    load();
 
-    const interval = setInterval(load, 30000); // Fetch data every 30 seconds
+    const interval = setInterval(load, 30000);
 
-    return () => clearInterval(interval); // Cleanup interval on component unmount
+    return () => clearInterval(interval);
   }, []);
 
-  // Filter and calculate data
   const paidToday = entries.filter(
     (e) => isToday(e.entryTime) && e.paymentStatus === "paid"
   );
@@ -94,7 +88,7 @@ const Payment = () => {
     <main className="min-h-screen bg-neutral-900 text-white px-4 py-10 flex flex-col items-center">
       {/* Back Button */}
       <button
-        onClick={() => router.push("/")} // Navigate back to the main page
+        onClick={() => router.push("/")}
         className="absolute top-6 left-6 bg-neutral-700 hover:bg-neutral-600 px-4 py-2 rounded-lg font-semibold text-white shadow-lg transition duration-300 cursor-pointer"
       >
         Back
