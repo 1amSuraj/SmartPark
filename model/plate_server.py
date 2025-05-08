@@ -1,5 +1,3 @@
-# plate_server.py
-
 from flask import Flask, jsonify
 import cv2
 import requests
@@ -12,16 +10,13 @@ load_dotenv()
 
 # Initialize Flask app
 app = Flask(__name__)
-CORS(app)  # Allow CORS for all origins (you can restrict this later)
+CORS(app)  
 
-# Load the Plate Recognizer API token
 TOKEN = os.getenv("PLATE_RECOGNIZER_TOKEN")
 API_URL = "https://api.platerecognizer.com/v1/plate-reader/"
 
-# Define an endpoint to capture and recognize plate
 @app.route('/plate', methods=['GET'])
 def detect_plate():
-    # Initialize the webcam (0 is the default camera)
     cap = cv2.VideoCapture(0)
     
     # Capture a frame from the webcam
@@ -53,6 +48,5 @@ def detect_plate():
 
 
 # Run the Flask app
-# if __name__ == "__main__":
-    # app.run(debug=True, port=5001)  # Running on port 5001
-    # app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5001)))
+if __name__ == "__main__":
+    app.run(debug=True, port=5001)  # Running on port 5001
