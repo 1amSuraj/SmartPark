@@ -13,7 +13,7 @@ import "./globals.css";
 // });
 
 export const metadata: Metadata = {
-  title: "Parking Automation",
+  title: "SmartPark",
   description: "Automated Parking with Unique Payment Technique",
 };
 
