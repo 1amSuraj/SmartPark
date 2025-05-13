@@ -17,7 +17,7 @@ export default function Home() {
           SmartPark
         </h1>
         <h2 className="text-2xl sm:text-3xl md:text-3xl font-semibold mt-2 text-purple-100 mt-2">
-          Reinventing the Future of Parking
+          Reinventing the Parking Experience
         </h2>
       </div>
 
