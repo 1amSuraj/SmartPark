@@ -14,10 +14,10 @@ export default function Home() {
     <main className="min-h-screen bg-neutral-900 text-white flex flex-col items-center justify-center px-4">
       <div className="text-center mb-16">
         <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight text-purple-400">
-          Suraj's
+          SmartPark
         </h1>
-        <h2 className="text-4xl sm:text-5xl md:text-6xl font-semibold mt-2 text-purple-100">
-          Parking System
+        <h2 className="text-2xl sm:text-3xl md:text-3xl font-semibold mt-2 text-purple-100 mt-2">
+          Reinventing the Future of Parking
         </h2>
       </div>
 

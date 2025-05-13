@@ -116,7 +116,7 @@ const Page = () => {
       </button>
       <ToastContainer /> {/* Add ToastContainer to render notifications */}
       <h1 className="text-4xl md:text-5xl font-bold mb-3 text-center">
-        Suraj's Parking Control Panel
+        SmartPark Control Panel
       </h1>
       <p className="text-md text-neutral-400 mb-10 text-center">
         Record a new vehicle entry
@@ -240,6 +240,12 @@ const Page = () => {
           </button>
         </div>
       </form>
+      <div>
+        <img src="ApiScanner.png" alt="Api" className="h-40 mt-10 mb-4" />
+      </div>
+      <p className="text-md text-neutral-400 text-center">
+        Scan this to activate Whatsapp Services
+      </p>
     </main>
   );
 };

@@ -96,7 +96,7 @@ const Payment = () => {
 
       {/* Header */}
       <h1 className="text-4xl font-bold mb-2 text-white">Payment Dashboard</h1>
-      <p className="text-sm mb-10 text-white">
+      <p className="text-md text-neutral-400 mb-10 text-center">
         All figures based on current data
       </p>
 

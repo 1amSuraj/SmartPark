@@ -93,7 +93,7 @@ const View = () => {
       </button>
       <h1 className="text-4xl font-bold mb-2 text-center">Parking Logs</h1>
       <p className="text-sm text-neutral-400 mb-10 text-center">
-        Updated every 30 seconds
+        Updates every 30 seconds
       </p>
 
       {/* Controls */}
