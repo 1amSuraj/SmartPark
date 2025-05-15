@@ -209,10 +209,29 @@ const getAllParkingEntries = async (req, res) => {
   }
 };
 
+const deletingVehicleEntries = async (req, res) => {
+  const { vehicleNo } = req.body;
+  try {
+    const deletedEntry = await Parking.findOneAndDelete({ vehicleNo });
+    if (!deletedEntry) {
+      return res
+        .status(404)
+        .json({ message: "No entry found for this vehicle number" });
+    }
+    return res
+      .status(200)
+      .json({ message: "Entry deleted successfully.", deletedEntry });
+  } catch (err) {
+    console.error("Error deleting parking entry:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 module.exports = {
   createParkingEntry,
   handlePaymentWebhook,
   handlePayMessage,
   handleGupshupWebhook,
   getAllParkingEntries,
+  deletingVehicleEntries,
 };
