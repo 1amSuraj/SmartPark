@@ -81,7 +81,7 @@ const handlePaymentWebhook = async (req, res) => {
 
 const handlePayMessage = async (req, res) => {
   try {
-    console.log("entering handle");
+    // console.log("entering handle");
     const { phone } = req.body;
 
     // Find the parking entry for the user
@@ -98,11 +98,11 @@ const handlePayMessage = async (req, res) => {
       (currentTime - entryTime) / (1000 * 60 * 60)
     ); // Convert milliseconds to hours
     const extraDuration = totalDuration - parkingEntry.updatedDuration;
-    console.log(extraDuration);
-    console.log(totalDuration);
-    console.log(parkingEntry.parkingDuration);
+    // console.log(extraDuration);
+    // console.log(totalDuration);
+    // console.log(parkingEntry.parkingDuration);
 
-    console.log(parkingEntry.updatedDuration);
+    // console.log(parkingEntry.updatedDuration);
 
     // Handle case where payment is pending but no extra charges apply
     if (parkingEntry.paymentStatus === "pending" && extraDuration <= 0) {
@@ -130,13 +130,13 @@ const handlePayMessage = async (req, res) => {
     }
 
     // Generate a new payment link
-    let timeLeft = Math.max(
-      0,
-      (entryTime.getTime() + totalDuration * 60 * 60 * 1000 - currentTime) /
-        (1000 * 60 * 60)
-    ); // Time left in hours
+    // let timeLeft = Math.max(
+    //   0,
+    //   (entryTime.getTime() + totalDuration * 60 * 60 * 1000 - currentTime) /
+    //     (1000 * 60 * 60)
+    // ); // Time left in hours
 
-    timeLeft = parseFloat(timeLeft.toFixed(2));
+    // timeLeft = parseFloat(timeLeft.toFixed(2));
 
     const paymentLink = await generatePaymentLink(
       totalAmount,
@@ -158,7 +158,7 @@ const handlePayMessage = async (req, res) => {
         : `Your updated parking bill is ready. Vehicle No: ${parkingEntry.vehicleNo}. Total Amount: ₹${totalAmount}. Please complete your payment here: ${paymentLink.short_url}`;
     await sendWhatsAppMessage(parkingEntry.phone, message);
 
-    console.log("exiting handle");
+    // console.log("exiting handle");
 
     res.status(200).json({
       message: "New payment link sent to the user and updated in the database.",
@@ -211,18 +211,76 @@ const getAllParkingEntries = async (req, res) => {
 
 const deletingVehicleEntries = async (req, res) => {
   const { vehicleNo } = req.body;
+  if (!vehicleNo) {
+    return res
+      .status(400)
+      .json({ message: "vehicleNo is required in the request body." });
+  }
+
   try {
-    const deletedEntry = await Parking.findOneAndDelete({ vehicleNo });
-    if (!deletedEntry) {
+    const parkingEntry = await Parking.findOne({ vehicleNo });
+    if (!parkingEntry) {
       return res
         .status(404)
         .json({ message: "No entry found for this vehicle number" });
     }
-    return res
-      .status(200)
-      .json({ message: "Entry deleted successfully.", deletedEntry });
+    const phone = parkingEntry.phone;
+    // await handlePayMessage(req, res);
+    const currentTime = new Date();
+    const entryTime = new Date(parkingEntry.entryTime);
+    const totalDuration = Math.ceil(
+      (currentTime - entryTime) / (1000 * 60 * 60)
+    ); // Convert milliseconds to hours
+    const extraDuration = totalDuration - parkingEntry.updatedDuration;
+
+    if (parkingEntry.paymentStatus === "pending" && extraDuration <= 0) {
+      const message =
+        "Pay from the above link or check you sms for the payment request.";
+      await sendWhatsAppMessage(phone, message);
+      return res.status(400).json({
+        message: "Pending bill message sent to user",
+      });
+    }
+    const normalBill = parkingEntry.parkingDuration * 50; // 50 INR per hour
+
+    const extraCharges = extraDuration > 0 ? extraDuration * 70 : 0; // 70 INR per extra hour
+
+    const totalAmount =
+      parkingEntry.firstPayment === true
+        ? extraCharges
+        : normalBill + extraCharges;
+
+    if (totalAmount === 0) {
+      try {
+        await Parking.findOneAndDelete({ vehicleNo });
+        return res.status(200).json({ message: "Entry deleted successfully." });
+      } catch (err) {
+        console.error("Error deleting parking entry:", err);
+        res.status(500).json({ message: "Server error" });
+      }
+    }
+    const paymentLink = await generatePaymentLink(
+      totalAmount,
+      parkingEntry.phone,
+      parkingEntry.vehicleNo,
+      1
+    );
+    parkingEntry.paymentLinkId = paymentLink.id;
+    parkingEntry.paymentStatus = "pending";
+    parkingEntry.extraDuration = extraDuration;
+    await parkingEntry.save();
+
+    const message =
+      parkingEntry.firstPayment === true
+        ? `You have stayed beyond your booked duration. Vehicle No: ${parkingEntry.vehicleNo}. Extra Duration: ${extraDuration} hours. Extra Charges: ₹${extraCharges}. Please complete your payment here: ${paymentLink.short_url}`
+        : `Your updated parking bill is ready. Vehicle No: ${parkingEntry.vehicleNo}. Total Amount: ₹${totalAmount}. Please complete your payment here: ${paymentLink.short_url}`;
+    await sendWhatsAppMessage(parkingEntry.phone, message);
+    res.status(200).json({
+      message: "New payment link sent to the user and updated in the database.",
+      paymentLink,
+    });
   } catch (err) {
-    console.error("Error deleting parking entry:", err);
+    console.error("Error deleting:", err);
     res.status(500).json({ message: "Server error" });
   }
 };

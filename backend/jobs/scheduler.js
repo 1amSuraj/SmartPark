@@ -30,8 +30,9 @@ const scheduleJobs = () => {
       // Send WhatsApp messages for each expired entry
       for (const entry of expiredEntries) {
         const message = `Your parking duration of ${entry.parkingDuration} hours has ended. You will now be charged a penalty based on your exit time.`;
-        await sendWhatsAppMessage(entry.phone, message);
 
+        await sendWhatsAppMessage(entry.phone, message);
+        entry.paymentStatus = "pending";
         // Mark the notification as sent
         entry.notificationSent = true;
         await entry.save();
