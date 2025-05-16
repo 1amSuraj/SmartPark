@@ -1,23 +1,27 @@
 const Parking = require("../models/Parking");
 const Stats = require("../models/Stats");
 
+function getTodayMidnight() {
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  return now;
+}
+
 async function updateStatsOnEntry() {
-  const today = new Date();
-  const dateStr = today.toISOString().slice(0, 10);
-  let stats = await Stats.findOne({ date: dateStr });
+  const today = getTodayMidnight();
+  let stats = await Stats.findOne({ date: today });
   if (!stats) {
-    stats = await Stats.create({ date: dateStr });
+    stats = await Stats.create({ date: today });
   }
   stats.entriesToday += 1;
   await stats.save();
 }
 
 async function updateStatsOnPayment(amount) {
-  const today = new Date();
-  const dateStr = today.toISOString().slice(0, 10);
-  let stats = await Stats.findOne({ date: dateStr });
+  const today = getTodayMidnight();
+  let stats = await Stats.findOne({ date: today });
   if (!stats) {
-    stats = await Stats.create({ date: dateStr });
+    stats = await Stats.create({ date: today });
   }
   stats.totalPaidToday += amount;
   await stats.save();
@@ -303,15 +307,14 @@ const deletingVehicleEntries = async (req, res) => {
 
 const getStats = async (req, res) => {
   try {
-    const today = new Date();
-    const dateStr = today.toISOString().slice(0, 10);
-    console.log(1);
+    const today = getTodayMidnight();
+
     // Get today's stats
-    const todayStats = (await Stats.findOne({ date: dateStr })) || {
+    const todayStats = (await Stats.findOne({ date: today })) || {
       totalPaidToday: 0,
       entriesToday: 0,
     };
-    console.log(2);
+
     // Calculate last 7 and 30 days
     const sevenDaysAgo = new Date(today);
     sevenDaysAgo.setDate(today.getDate() - 6);
@@ -326,7 +329,6 @@ const getStats = async (req, res) => {
       { $match: { date: { $gte: monthAgo } } },
       { $group: { _id: null, total: { $sum: "$totalPaidToday" } } },
     ]);
-    console.log(3);
     res.json({
       totalPaidToday: todayStats.totalPaidToday || 0,
       totalPaid7Days: stats7[0]?.total || 0,
