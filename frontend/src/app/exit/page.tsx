@@ -5,28 +5,18 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css"; // Import Toastify CSS
+import "react-toastify/dist/ReactToastify.css";
 
 const Page = () => {
   const router = useRouter();
   const [vehicleNo, setVehicleNo] = useState("");
-  const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
   const [scanning, setScanning] = useState(false);
-
-  const formatPhoneNumber = (phone: string): string => {
-    if (phone.startsWith("91")) {
-      return phone;
-    }
-    return `91${phone}`;
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
-    // Format the phone number before submitting
-    const formattedPhone = formatPhoneNumber(phone);
     const payload = {
       vehicleNo,
     };
@@ -111,12 +101,12 @@ const Page = () => {
   return (
     <main className="min-h-screen bg-neutral-900 text-white px-6 py-12 flex flex-col items-center">
       <button
-        onClick={() => router.push("/")} // Navigate back to the main page
+        onClick={() => router.push("/")}
         className="absolute top-6 left-6 bg-neutral-700 hover:bg-neutral-600 px-4 py-2 rounded-lg font-semibold text-white shadow-lg transition duration-300 cursor-pointer"
       >
         Back
       </button>
-      <ToastContainer /> {/* Add ToastContainer to render notifications */}
+      <ToastContainer />
       <h1 className="text-4xl md:text-5xl font-bold mb-3 text-center">
         SmartPark Exit Panel
       </h1>
