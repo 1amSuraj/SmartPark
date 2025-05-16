@@ -44,8 +44,8 @@ export default function Home() {
           target="_blank"
           rel="noopener noreferrer"
           className="text-purple-400 relative transition-colors duration-300
-            after:content-[''] after:block after:h-0.5 after:w-0 after:bg-gradient-to-r after:from-purple-400 after:to-blue-400 after:transition-all after:duration-300
-            hover:after:w-full hover:after:bg-gradient-to-r hover:after:from-purple-400 hover:after:to-blue-400"
+  after:content-[''] after:block after:h-0.5 after:w-0 after:bg-gradient-to-r after:from-purple-400 after:to-cyan-400 after:transition-all after:duration-300
+  hover:after:w-full hover:after:bg-gradient-to-r hover:after:from-purple-400 hover:after:to-cyan-400"
           style={{ display: "inline-block" }}
         >
           Suraj Srivastava
