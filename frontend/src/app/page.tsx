@@ -20,7 +20,7 @@ export default function Home() {
           <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight text-purple-400">
             SmartPark
           </h1>
-          <h2 className="text-2xl sm:text-3xl md:text-3xl font-semibold mt-2 text-purple-100 mt-2">
+          <h2 className="text-2xl sm:text-3xl md:text-3xl font-semibold mt-2 text-purple-100 ">
             Reinventing the Parking Experience
           </h2>
         </div>

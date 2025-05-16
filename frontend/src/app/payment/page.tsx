@@ -59,7 +59,6 @@ const Payment = () => {
     const load = async () => {
       const data = await fetchParkingData();
       setEntries(data);
-      // Fetch stats from backend
       try {
         const statsRes = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/parking/stats`

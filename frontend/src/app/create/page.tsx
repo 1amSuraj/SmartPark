@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css"; // Import Toastify CSS
+import "react-toastify/dist/ReactToastify.css";
 
 const Page = () => {
   const router = useRouter();
@@ -48,16 +48,15 @@ const Page = () => {
       if (response.status === 201) {
         toast.success("Entry created successfully!", {
           position: "top-right",
-          autoClose: 3000, // Close after 3 seconds
+          autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
         });
-        console.log("Response:", response.data);
+        // console.log("Response:", response.data);
 
-        // Reset the form fields
         setVehicleNo("");
         setVehicleType("Car");
         setPhone("");
@@ -74,7 +73,7 @@ const Page = () => {
         });
       }
     } catch (error) {
-      console.error("Error creating entry:", error);
+      // console.error("Error creating entry:", error);
       toast.error("An error occurred while creating the entry.", {
         position: "top-right",
         autoClose: 3000,
@@ -110,12 +109,12 @@ const Page = () => {
   return (
     <main className="min-h-screen bg-neutral-900 text-white px-6 py-12 pt-20 sm:pt-12 flex flex-col items-center">
       <button
-        onClick={() => router.push("/")} // Navigate back to the main page
+        onClick={() => router.push("/")}
         className="absolute top-6 left-6 bg-neutral-700 hover:bg-neutral-600 px-4 py-2 rounded-lg font-semibold text-white shadow-lg transition duration-300 cursor-pointer"
       >
         Back
       </button>
-      <ToastContainer /> {/* Add ToastContainer to render notifications */}
+      <ToastContainer />
       <h1 className="text-4xl md:text-5xl font-bold mb-3 text-center">
         SmartPark Control Panel
       </h1>
