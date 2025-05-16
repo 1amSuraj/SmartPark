@@ -225,7 +225,7 @@ const deletingVehicleEntries = async (req, res) => {
         .json({ message: "No entry found for this vehicle number" });
     }
     const phone = parkingEntry.phone;
-    // await handlePayMessage(req, res);
+
     const currentTime = new Date();
     const entryTime = new Date(parkingEntry.entryTime);
     const totalDuration = Math.ceil(
@@ -275,8 +275,8 @@ const deletingVehicleEntries = async (req, res) => {
         ? `You have stayed beyond your booked duration. Vehicle No: ${parkingEntry.vehicleNo}. Extra Duration: ${extraDuration} hours. Extra Charges: ₹${extraCharges}. Please complete your payment here: ${paymentLink.short_url}`
         : `Your updated parking bill is ready. Vehicle No: ${parkingEntry.vehicleNo}. Total Amount: ₹${totalAmount}. Please complete your payment here: ${paymentLink.short_url}`;
     await sendWhatsAppMessage(parkingEntry.phone, message);
-    res.status(200).json({
-      message: "New payment link sent to the user and updated in the database.",
+    res.status(203).json({
+      message: "New payment link sent to the user, payment is still pending",
       paymentLink,
     });
   } catch (err) {
