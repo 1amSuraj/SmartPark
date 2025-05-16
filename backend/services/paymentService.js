@@ -16,7 +16,7 @@ const generatePaymentLink = async (
 ) => {
   try {
     const options = {
-      amount: amount * 100, // Amount in paise (e.g., 500 INR = 50000 paise)
+      amount: amount * 100, // Amount in paise
       currency: "INR",
       accept_partial: false,
       description: `Parking fee for vehicle ${vehicleNo}`,
@@ -30,7 +30,6 @@ const generatePaymentLink = async (
       },
       reminder_enable: true,
       expire_by: Math.floor(Date.now() / 1000) + parkingDuration * 60 * 60,
-      // expire_by: Math.floor(Date.now() / 1000) + 3600,
     };
 
     const response = await razorpay.paymentLink.create(options);
