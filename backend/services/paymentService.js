@@ -1,5 +1,6 @@
 const Razorpay = require("razorpay");
 const dotenv = require("dotenv");
+const Parking = require("../models/Parking");
 
 dotenv.config();
 
@@ -21,7 +22,7 @@ const generatePaymentLink = async (
       accept_partial: false,
       description: `Parking fee for vehicle ${vehicleNo}`,
       customer: {
-        name: "Parking User", // You can customize this if you have user details
+        name: "Parking User",
         contact: phone,
       },
       notify: {
@@ -33,8 +34,14 @@ const generatePaymentLink = async (
     };
 
     const response = await razorpay.paymentLink.create(options);
+    const parkingEntry = await Parking.findOne({ vehicleNo });
+    const linkId = parkingEntry.paymentLinkId;
+    const linkDetails = await razorpay.paymentLink.fetch(linkId);
+    if (linkDetails.status === "created") {
+      await razorpay.paymentLink.cancel(linkId);
+    }
     console.log("Payment link generated and sent");
-    return response; // Return the payment link
+    return response;
   } catch (error) {
     console.error("Error generating payment link:", error);
     throw error;
