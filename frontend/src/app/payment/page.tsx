@@ -85,7 +85,7 @@ const Payment = () => {
   ];
 
   return (
-    <main className="min-h-screen bg-neutral-900 text-white px-4 py-10 flex flex-col items-center">
+    <main className="min-h-screen bg-neutral-900 text-white px-4 py-10 flex flex-col pt-20 sm:pt-12 items-center">
       {/* Back Button */}
       <button
         onClick={() => router.push("/")}

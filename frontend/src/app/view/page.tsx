@@ -88,7 +88,7 @@ const View = () => {
   }, [entries, search, filterStatus, sortKey]);
 
   return (
-    <main className="min-h-screen bg-neutral-900 text-white px-6 py-12">
+    <main className="min-h-screen bg-neutral-900 text-white pt-20 sm:pt-12 px-6 py-12">
       <button
         onClick={() => router.push("/")}
         className="absolute top-6 left-6 bg-neutral-700 hover:bg-neutral-600 px-4 py-2 rounded-lg font-semibold text-white shadow-lg transition duration-300 cursor-pointer"
