@@ -1,4 +1,28 @@
 const Parking = require("../models/Parking");
+const Stats = require("../models/Stats");
+
+async function updateStatsOnEntry() {
+  const today = new Date();
+  const dateStr = today.toISOString().slice(0, 10);
+  let stats = await Stats.findOne({ date: dateStr });
+  if (!stats) {
+    stats = await Stats.create({ date: dateStr });
+  }
+  stats.entriesToday += 1;
+  await stats.save();
+}
+
+async function updateStatsOnPayment(amount) {
+  const today = new Date();
+  const dateStr = today.toISOString().slice(0, 10);
+  let stats = await Stats.findOne({ date: dateStr });
+  if (!stats) {
+    stats = await Stats.create({ date: dateStr });
+  }
+  stats.totalPaidToday += amount;
+  await stats.save();
+}
+
 const { sendWhatsAppMessage } = require("../services/whatsappService.js");
 const { generatePaymentLink } = require("../services/paymentService.js");
 
@@ -24,6 +48,7 @@ const createParkingEntry = async (req, res) => {
       parkingDuration,
       paymentLinkId: paymentLink.id, // Save Razorpay payment link ID
     });
+    await updateStatsOnEntry();
 
     // Send WhatsApp message with payment link
     const message = `Your parking entry has been created. Vehicle No: ${vehicleNo}, Duration: ${parkingDuration} hours. Please complete your payment here: ${paymentLink.short_url}`;
@@ -39,12 +64,12 @@ const createParkingEntry = async (req, res) => {
 const handlePaymentWebhook = async (req, res) => {
   try {
     const payload = req.body;
-
+    console.log(payload);
     // Verify the event type
     if (payload.event === "payment_link.paid") {
       const paymentLinkId = payload.payload.payment_link.entity.id;
       const paidAmount = payload.payload.payment_link.entity.amount_paid / 100; // Convert from paise to INR
-
+      await updateStatsOnPayment(paidAmount);
       // Find the parking entry using the payment link ID
       const parkingEntry = await Parking.findOne({ paymentLinkId });
 
@@ -128,15 +153,6 @@ const handlePayMessage = async (req, res) => {
         .status(200)
         .json({ message: "No extra charges. User has already paid." });
     }
-
-    // Generate a new payment link
-    // let timeLeft = Math.max(
-    //   0,
-    //   (entryTime.getTime() + totalDuration * 60 * 60 * 1000 - currentTime) /
-    //     (1000 * 60 * 60)
-    // ); // Time left in hours
-
-    // timeLeft = parseFloat(timeLeft.toFixed(2));
 
     const paymentLink = await generatePaymentLink(
       totalAmount,
@@ -285,6 +301,43 @@ const deletingVehicleEntries = async (req, res) => {
   }
 };
 
+const getStats = async (req, res) => {
+  try {
+    const today = new Date();
+    const dateStr = today.toISOString().slice(0, 10);
+    console.log(1);
+    // Get today's stats
+    const todayStats = (await Stats.findOne({ date: dateStr })) || {
+      totalPaidToday: 0,
+      entriesToday: 0,
+    };
+    console.log(2);
+    // Calculate last 7 and 30 days
+    const sevenDaysAgo = new Date(today);
+    sevenDaysAgo.setDate(today.getDate() - 6);
+    const monthAgo = new Date(today);
+    monthAgo.setDate(today.getDate() - 29);
+
+    const stats7 = await Stats.aggregate([
+      { $match: { date: { $gte: sevenDaysAgo } } },
+      { $group: { _id: null, total: { $sum: "$totalPaidToday" } } },
+    ]);
+    const stats30 = await Stats.aggregate([
+      { $match: { date: { $gte: monthAgo } } },
+      { $group: { _id: null, total: { $sum: "$totalPaidToday" } } },
+    ]);
+    console.log(3);
+    res.json({
+      totalPaidToday: todayStats.totalPaidToday || 0,
+      totalPaid7Days: stats7[0]?.total || 0,
+      totalPaid30Days: stats30[0]?.total || 0,
+      entriesToday: todayStats.entriesToday || 0,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching stats" });
+  }
+};
+
 module.exports = {
   createParkingEntry,
   handlePaymentWebhook,
@@ -292,4 +345,5 @@ module.exports = {
   handleGupshupWebhook,
   getAllParkingEntries,
   deletingVehicleEntries,
+  getStats,
 };
