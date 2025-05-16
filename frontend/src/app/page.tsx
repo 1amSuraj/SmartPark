@@ -8,6 +8,7 @@ export default function Home() {
     { label: "Create", route: "/create" },
     { label: "View", route: "/view" },
     { label: "Payment", route: "/payment" },
+    { label: "Exit", route: "/exit" },
   ];
 
   return (
@@ -21,7 +22,7 @@ export default function Home() {
         </h2>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 w-full max-w-4xl">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-8 w-full max-w-4xl">
         {buttons.map((btn) => (
           <button
             key={btn.label}
