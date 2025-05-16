@@ -43,11 +43,31 @@ const isToday = (dateStr: string) => {
 const Payment = () => {
   const router = useRouter();
   const [entries, setEntries] = useState<ParkingEntry[]>([]);
+  const [stats, setStats] = useState<{
+    totalPaidToday: number;
+    totalPaid7Days: number;
+    totalPaid30Days: number;
+    entriesToday: number;
+  }>({
+    totalPaidToday: 0,
+    totalPaid7Days: 0,
+    totalPaid30Days: 0,
+    entriesToday: 0,
+  });
 
   useEffect(() => {
     const load = async () => {
       const data = await fetchParkingData();
       setEntries(data);
+      // Fetch stats from backend
+      try {
+        const statsRes = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/parking/stats`
+        );
+        setStats(statsRes.data);
+      } catch (err) {
+        console.error("Error fetching stats:", err);
+      }
     };
 
     load();
@@ -63,21 +83,6 @@ const Payment = () => {
   const unpaidToday = entries.filter(
     (e) => isToday(e.entryTime) && e.paymentStatus === "pending"
   );
-  const allPaid = entries.filter((e) => e.paymentStatus === "paid");
-
-  const todayIncome = paidToday.reduce((sum, e) => sum + e.totalAmount, 0);
-  const weekIncome = allPaid.reduce((sum, e) => {
-    const d = new Date(e.entryTime);
-    const now = new Date();
-    const diff = (now.getTime() - d.getTime()) / (1000 * 60 * 60 * 24);
-    return diff <= 7 ? sum + e.totalAmount : sum;
-  }, 0);
-  const monthIncome = allPaid.reduce((sum, e) => {
-    const d = new Date(e.entryTime);
-    const now = new Date();
-    const diff = (now.getTime() - d.getTime()) / (1000 * 60 * 60 * 24);
-    return diff <= 30 ? sum + e.totalAmount : sum;
-  }, 0);
 
   const chartData = [
     { name: "Paid", value: paidToday.length },
@@ -101,20 +106,33 @@ const Payment = () => {
       </p>
 
       {/* Cards Section */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 w-full max-w-6xl">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10 w-full max-w-6xl">
         <div className="bg-neutral-800 rounded-xl p-6 shadow-md">
           <h3 className="text-lg text-white mb-2">Today's Income</h3>
-          <p className="text-3xl font-bold text-green-400">₹{todayIncome}</p>
+          <p className="text-3xl font-bold text-green-400">
+            ₹{stats.totalPaidToday}
+          </p>
         </div>
 
         <div className="bg-neutral-800 rounded-xl p-6 shadow-md">
           <h3 className="text-lg text-white mb-2">Last 7 Days</h3>
-          <p className="text-3xl font-bold text-blue-400">₹{weekIncome}</p>
+          <p className="text-3xl font-bold text-blue-400">
+            ₹{stats.totalPaid7Days}
+          </p>
         </div>
 
         <div className="bg-neutral-800 rounded-xl p-6 shadow-md">
           <h3 className="text-lg text-white mb-2">Last 30 Days</h3>
-          <p className="text-3xl font-bold text-yellow-400">₹{monthIncome}</p>
+          <p className="text-3xl font-bold text-yellow-400">
+            ₹{stats.totalPaid30Days}
+          </p>
+        </div>
+
+        <div className="bg-neutral-800 rounded-xl p-6 shadow-md">
+          <h3 className="text-lg text-white mb-2">Entries Today</h3>
+          <p className="text-3xl font-bold text-purple-400">
+            {stats.entriesToday}
+          </p>
         </div>
       </div>
 
