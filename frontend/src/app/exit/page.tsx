@@ -65,7 +65,7 @@ const Page = () => {
         }
       }
     } catch (error) {
-      console.error("Error deleting entry:", error);
+      console.error("No such entry detected:", error);
       toast.error("An error occurred while deleting the entry.", {
         position: "top-right",
         autoClose: 3000,
