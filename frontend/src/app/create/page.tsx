@@ -127,7 +127,7 @@ const Page = () => {
         type="button"
         onClick={handlePlateScan}
         disabled={scanning}
-        className={`mb-6 px-6 py-3 rounded-lg font-semibold text-white shadow-lg transition duration-300 w-full md:w-1/5 cursor-pointer ${
+        className={`mb-6 px-6 py-3 rounded-lg font-semibold text-white shadow-lg transition duration-300  md:w-1/5 cursor-pointer ${
           scanning
             ? "bg-neutral-700 cursor-not-allowed"
             : "bg-neutral-700 hover:bg-neutral-600"
@@ -208,7 +208,7 @@ const Page = () => {
           <button
             type="submit"
             disabled={loading} // Disable the button while loading
-            className={`px-6 py-3 cursor-pointer rounded-lg font-semibold text-white shadow-lg transition duration-300 w-1/5 ${
+            className={`px-6 py-3 cursor-pointer rounded-lg font-semibold text-white shadow-lg transition duration-300 md:w-1/5 ${
               loading
                 ? "bg-neutral-600 cursor-not-allowed"
                 : "bg-neutral-700 hover:bg-neutral-600"
