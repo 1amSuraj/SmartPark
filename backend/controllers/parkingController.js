@@ -237,7 +237,7 @@ const deletingVehicleEntries = async (req, res) => {
       const message =
         "Pay from the above link or check you sms for the payment request.";
       await sendWhatsAppMessage(phone, message);
-      return res.status(400).json({
+      return res.status(203).json({
         message: "Pending bill message sent to user",
       });
     }

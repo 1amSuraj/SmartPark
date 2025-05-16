@@ -31,15 +31,23 @@ body {
 
 /* Success Notification */
 .Toastify__toast--success {
-  background-color: oklch(37.1% 0 0) !important; /* Green background */
-  color: white !important; /* White text */
+  background-color: oklch(37.1% 0 0) !important; 
+  color: white !important; 
+}
+.Toastify__toast--warning {
+  background-color: oklch(37.1% 0 0) !important; 
+  color: white !important; 
 }
 
 /* Error Notification */
 .Toastify__toast--error {
-  background-color: #dc2626 !important; /* Red background */
-  color: white !important; /* White text */
+  background-color: oklch(37.1% 0 0) !important; 
+  color: white !important; 
 }
+/* .Toastify__toast--warning {
+  background-color: #fde047 !important; /* Yellow background */
+  /* color: #171717 !important;            /* Black text */
+/* } */ 
 
 /* Customize the progress bar */
 .Toastify__progress-bar {

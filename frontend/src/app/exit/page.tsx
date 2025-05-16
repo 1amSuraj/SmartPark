@@ -21,16 +21,17 @@ const Page = () => {
       vehicleNo,
     };
     try {
+      // const response = await axios.delete(
+      //   `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/parking/exit`,
+      //   { data: payload }
+      // );
       const response = await axios.delete(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/parking/exit`,
+        "http://localhost:5000/api/parking/exit",
         { data: payload }
       );
-      //   const response = await axios.delete(
-      //     "http://localhost:5000/api/parking/exit",
-      //     { data: payload }
-      //   );
+
       if (response.status === 203) {
-        toast.error("Payment still pending", {
+        toast.warning("Payment still pending", {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
