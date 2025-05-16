@@ -35,10 +35,12 @@ const generatePaymentLink = async (
 
     const response = await razorpay.paymentLink.create(options);
     const parkingEntry = await Parking.findOne({ vehicleNo });
-    const linkId = parkingEntry.paymentLinkId;
-    const linkDetails = await razorpay.paymentLink.fetch(linkId);
-    if (linkDetails.status === "created") {
-      await razorpay.paymentLink.cancel(linkId);
+    if (parkingEntry) {
+      const linkId = parkingEntry.paymentLinkId;
+      const linkDetails = await razorpay.paymentLink.fetch(linkId);
+      if (linkDetails.status === "created") {
+        await razorpay.paymentLink.cancel(linkId);
+      }
     }
     console.log("Payment link generated and sent");
     return response;
