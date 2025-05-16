@@ -1,14 +1,25 @@
 const Parking = require("../models/Parking");
 const Stats = require("../models/Stats");
 
-function getTodayMidnight() {
+// function getTodayMidnight() {
+//   const now = new Date();
+//   now.setUTCHours(0, 0, 0, 0);
+//   return now;
+// }
+function getTodayMidnightIST() {
   const now = new Date();
-  now.setHours(0, 0, 0, 0);
-  return now;
+  // Convert to IST by adding 5 hours 30 minutes
+  const istOffset = 5.5 * 60 * 60 * 1000;
+  const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+  const istDate = new Date(utc + istOffset);
+  istDate.setHours(0, 0, 0, 0); // Set to midnight IST
+  // Now get UTC time for IST midnight
+  const midnightIST_utc = new Date(istDate.getTime() - istOffset);
+  return midnightIST_utc;
 }
 
 async function updateStatsOnEntry() {
-  const today = getTodayMidnight();
+  const today = getTodayMidnightIST();
   let stats = await Stats.findOne({ date: today });
   if (!stats) {
     stats = await Stats.create({ date: today });
@@ -18,7 +29,7 @@ async function updateStatsOnEntry() {
 }
 
 async function updateStatsOnPayment(amount) {
-  const today = getTodayMidnight();
+  const today = getTodayMidnightIST();
   let stats = await Stats.findOne({ date: today });
   if (!stats) {
     stats = await Stats.create({ date: today });
@@ -307,7 +318,7 @@ const deletingVehicleEntries = async (req, res) => {
 
 const getStats = async (req, res) => {
   try {
-    const today = getTodayMidnight();
+    const today = getTodayMidnightIST();
 
     // Get today's stats
     const todayStats = (await Stats.findOne({ date: today })) || {
