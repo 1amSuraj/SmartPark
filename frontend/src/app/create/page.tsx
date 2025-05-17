@@ -234,11 +234,11 @@ const Page = () => {
         </div>
       </div>
       <p className="text-md text-neutral-400 text-center">
-        To test the "PAY" feature, first scan this QR to activate the Whatsapp
-        services, then create entry from that number, after that let the entry
-        go beyond the selected duration. When the time limit exceeds, try
-        sending "PAY" on the Gupshup number, it will send you payment link with
-        updated bill
+        To test the 'PAY' feature, start by scanning this QR code to activate
+        WhatsApp services. Then, create an entry using that same number. Allow
+        the parking duration to exceed the selected limit. Once the time has
+        expired, send 'PAY' to the Gupshup number — you will receive a payment
+        link with the updated bill.
       </p>
     </main>
   );

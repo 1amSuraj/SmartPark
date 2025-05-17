@@ -12,7 +12,6 @@ export default function Home() {
     { label: "Exit", route: "/exit" },
   ];
 
-  // ...existing code...
   return (
     <main className="min-h-screen bg-neutral-900 text-white flex flex-col">
       <div className="flex-1 flex flex-col items-center justify-center px-4">
@@ -37,6 +36,11 @@ export default function Home() {
           ))}
         </div>
       </div>
+      <p className="text-md text-neutral-400 text-center">
+        This dashboard is designed exclusively for the Parking Gatekeeper, not
+        for users or drivers. It has been deployed solely for demonstration
+        purposes.
+      </p>
       <footer className="w-full text-center text-neutral-400 py-4 text-sm mt-10">
         Made by{" "}
         <a
@@ -64,5 +68,4 @@ export default function Home() {
       </footer>
     </main>
   );
-  // ...existing code...
 }
