@@ -26,10 +26,10 @@ const sendWhatsAppMessage = async (destination, message) => {
 
   try {
     const response = await axios.request(options);
-    console.log("WhatsApp message sent:", response.data);
+    // console.log("WhatsApp message sent:", response.data);
     return response.data;
   } catch (error) {
-    console.error("Error sending WhatsApp message:", error);
+    // console.error("Error sending WhatsApp message:", error);
     throw error;
   }
 };

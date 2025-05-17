@@ -34,7 +34,7 @@ const createParkingEntry = async (req, res) => {
   try {
     const { vehicleNo, vehicleType, phone, parkingDuration } = req.body;
 
-    const amount = parkingDuration * 50;
+    const amount = parkingDuration * 30;
 
     const paymentLink = await generatePaymentLink(
       amount,
@@ -131,9 +131,9 @@ const handlePayMessage = async (req, res) => {
     }
 
     // Calculate charges
-    const normalBill = parkingEntry.parkingDuration * 50; // 50 INR per hour
+    const normalBill = parkingEntry.parkingDuration * 30; // 30 INR per hour
 
-    const extraCharges = extraDuration > 0 ? extraDuration * 70 : 0; // 70 INR per extra hour
+    const extraCharges = extraDuration > 0 ? extraDuration * 40 : 0; // 40 INR per extra hour
     // parkingEntry.firstPayment = true;
 
     const totalAmount =
@@ -249,9 +249,9 @@ const deletingVehicleEntries = async (req, res) => {
         message: "Pending bill message sent to user",
       });
     }
-    const normalBill = parkingEntry.parkingDuration * 50; // 50 INR per hour
+    const normalBill = parkingEntry.parkingDuration * 30; // 30 INR per hour
 
-    const extraCharges = extraDuration > 0 ? extraDuration * 70 : 0; // 70 INR per extra hour
+    const extraCharges = extraDuration > 0 ? extraDuration * 40 : 0; // 40 INR per extra hour
 
     const totalAmount =
       parkingEntry.firstPayment === true
