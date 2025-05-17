@@ -2,7 +2,6 @@ const cron = require("node-cron");
 const Parking = require("../models/Parking");
 const { sendWhatsAppMessage } = require("../services/whatsappService");
 
-// Schedule a job to run every minute
 const scheduleJobs = () => {
   cron.schedule("* * * * *", async () => {
     console.log("Running scheduled job to check parking durations...");
@@ -11,7 +10,6 @@ const scheduleJobs = () => {
       // Get the current time
       const currentTime = new Date();
 
-      // Find parking entries where the duration has ended and the notification has not been sent
       const expiredEntries = await Parking.find({
         notificationSent: false,
         $expr: {

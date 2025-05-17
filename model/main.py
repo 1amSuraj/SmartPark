@@ -3,7 +3,7 @@ import requests
 import os
 from dotenv import load_dotenv
 
-# Load token from .env
+
 load_dotenv()
 TOKEN = os.getenv("PLATE_RECOGNIZER_TOKEN")
 API_URL = "https://api.platerecognizer.com/v1/plate-reader/"
@@ -47,30 +47,3 @@ while True:
 
 cap.release()
 cv2.destroyAllWindows()
-
-# import requests
-# import os
-# from dotenv import load_dotenv
-
-# # Load API key
-# load_dotenv()
-# TOKEN = os.getenv("PLATE_RECOGNIZER_TOKEN")
-# API_URL = "https://api.platerecognizer.com/v1/plate-reader/"
-
-# # Path to test image
-# image_path = "download.jpeg"
-
-# with open(image_path, 'rb') as img:
-#     response = requests.post(
-#         API_URL,
-#         files={"upload": img},
-#         headers={"Authorization": f"Token {TOKEN}"}
-#     )
-
-# data = response.json()
-
-# if data.get("results"):
-#     plate = data["results"][0]["plate"]
-#     print(f"[SUCCESS] Detected plate: {plate.upper()}")
-# else:
-#     print("[INFO] No plate detected.")

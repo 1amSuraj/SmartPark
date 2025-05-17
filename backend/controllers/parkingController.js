@@ -34,27 +34,24 @@ const createParkingEntry = async (req, res) => {
   try {
     const { vehicleNo, vehicleType, phone, parkingDuration } = req.body;
 
-    // Calculate the amount (e.g., 50 INR per hour)
     const amount = parkingDuration * 50;
 
-    // Generate payment link
     const paymentLink = await generatePaymentLink(
       amount,
       phone,
       vehicleNo,
       parkingDuration
     );
-    // Save parking entry to MongoDB
+
     const entry = await Parking.create({
       vehicleNo,
       vehicleType,
       phone,
       parkingDuration,
-      paymentLinkId: paymentLink.id, // Save Razorpay payment link ID
+      paymentLinkId: paymentLink.id,
     });
     await updateStatsOnEntry();
 
-    // Send WhatsApp message with payment link
     const message = `Your parking entry has been created. Vehicle No: ${vehicleNo}, Duration: ${parkingDuration} hours. Please complete your payment here: ${paymentLink.short_url}`;
     await sendWhatsAppMessage(phone, message);
 
@@ -69,19 +66,19 @@ const handlePaymentWebhook = async (req, res) => {
   try {
     const payload = req.body;
     console.log(payload);
-    // Verify the event type
+
     if (payload.event === "payment_link.paid") {
       const paymentLinkId = payload.payload.payment_link.entity.id;
       const paidAmount = payload.payload.payment_link.entity.amount_paid / 100; // Convert from paise to INR
       await updateStatsOnPayment(paidAmount);
-      // Find the parking entry using the payment link ID
+
       const parkingEntry = await Parking.findOne({ paymentLinkId });
 
       if (!parkingEntry) {
         return res.status(404).json({ message: "Parking entry not found" });
       }
       parkingEntry.firstPayment = true;
-      // Update the payment status and total amount in the database
+
       parkingEntry.paymentStatus = "paid";
       parkingEntry.totalAmount += paidAmount; // Use the amount from Razorpay webhook
       parkingEntry.updatedDuration += parkingEntry.extraDuration;
@@ -110,10 +107,8 @@ const handlePaymentWebhook = async (req, res) => {
 
 const handlePayMessage = async (req, res) => {
   try {
-    // console.log("entering handle");
     const { phone } = req.body;
 
-    // Find the parking entry for the user
     const parkingEntry = await Parking.findOne({ phone });
     if (!parkingEntry) {
       return res
@@ -127,11 +122,6 @@ const handlePayMessage = async (req, res) => {
       (currentTime - entryTime) / (1000 * 60 * 60)
     ); // Convert milliseconds to hours
     const extraDuration = totalDuration - parkingEntry.updatedDuration;
-    // console.log(extraDuration);
-    // console.log(totalDuration);
-    // console.log(parkingEntry.parkingDuration);
-
-    // console.log(parkingEntry.updatedDuration);
 
     // Handle case where payment is pending but no extra charges apply
     if (parkingEntry.paymentStatus === "pending" && extraDuration <= 0) {
@@ -177,8 +167,6 @@ const handlePayMessage = async (req, res) => {
         ? `You have stayed beyond your booked duration. Vehicle No: ${parkingEntry.vehicleNo}. Extra Duration: ${extraDuration} hours. Extra Charges: ₹${extraCharges}. Please complete your payment here: ${paymentLink.short_url}`
         : `Your updated parking bill is ready. Vehicle No: ${parkingEntry.vehicleNo}. Total Amount: ₹${totalAmount}. Please complete your payment here: ${paymentLink.short_url}`;
     await sendWhatsAppMessage(parkingEntry.phone, message);
-
-    // console.log("exiting handle");
 
     res.status(200).json({
       message: "New payment link sent to the user and updated in the database.",
