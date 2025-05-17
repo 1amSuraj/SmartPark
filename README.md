@@ -149,7 +149,7 @@ parkingSchema.pre("save", function (next) {
 - **LinkedIn**: [linkedin.com/in/suraj-srivastava41](https://linkedin.com/in/suraj-srivastava41)
 - **GitHub**: [github.com/1amSuraj](https://github.com/1amSuraj)
 - **Email**: srisuraj41@gmail.com
-- **Portfolio**: [https://suraj-srivastava.vercel.app/](https://suraj-srivastava.vercel.app/)
+- **Portfolio**: [https://suraj-srivastava.vercel.app/](https://suraj-srivastava.vercel.app)
 ---
 
 ## 📄 License
