@@ -1,6 +1,6 @@
 # 🚗 SmartPark – Parking Automation System
 
-![System Design](./frontend/public/ReadmeImage.png)
+![LOGO](./frontend/public/SmartParkLOGO2.png)
 
 SmartPark is an intelligent parking automation solution that modernizes traditional parking processes by automating vehicle entry/exit, integrating seamless WhatsApp-based payments, and providing real-time vehicle tracking. Designed with scalability and convenience in mind, SmartPark eliminates queues, reduces manual errors, and brings a cashless, digital-first experience to everyday parking.
 
