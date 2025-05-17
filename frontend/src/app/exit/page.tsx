@@ -169,7 +169,7 @@ const Page = () => {
         </div>
         <div className="bg-neutral-800 border border-neutral-700 rounded-xl px-6 py-4 shadow-lg max-w-md w-full text-center">
           <span className="text-neutral-200 text-sm font-medium">
-            If you're unsure how to make the Scan Plate Automatically feature
+            If you're not sure how to make the Scan Plate Automatically feature
             work, feel free to leave a comment on my LinkedIn post or send me a
             direct message.
           </span>
