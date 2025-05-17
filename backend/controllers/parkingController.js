@@ -1,11 +1,6 @@
 const Parking = require("../models/Parking");
 const Stats = require("../models/Stats");
 
-// function getTodayMidnight() {
-//   const now = new Date();
-//   now.setUTCHours(0, 0, 0, 0);
-//   return now;
-// }
 function getTodayMidnightUTC() {
   const now = new Date();
   now.setUTCHours(0, 0, 0, 0);

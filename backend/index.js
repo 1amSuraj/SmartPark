@@ -12,10 +12,6 @@ dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.get("/hello", () => {
-  console.log("I am happpyp");
-});
-// app.use("/api/parking", parkingRoutes);
 
 app.use("/api/parking", parkingRoutes);
 
