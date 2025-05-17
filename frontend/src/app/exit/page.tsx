@@ -157,6 +157,24 @@ const Page = () => {
           </button>
         </div>
       </form>
+      <div className="flex justify-center gap-4 mt-8">
+        {/* Existing info box */}
+        <div className="bg-neutral-800 border border-neutral-700 rounded-xl px-6 py-4 shadow-lg max-w-md w-full text-center">
+          <span className="text-neutral-200 text-sm font-medium">
+            This page is not required in the actual system — it's included here
+            for demonstration purposes only. In a commercial setup, a camera
+            will always be active at the exit gate and will operate using motion
+            detection.
+          </span>
+        </div>
+        <div className="bg-neutral-800 border border-neutral-700 rounded-xl px-6 py-4 shadow-lg max-w-md w-full text-center">
+          <span className="text-neutral-200 text-sm font-medium">
+            If you're unsure how to make the Scan Plate Automatically feature
+            work, feel free to leave a comment on my LinkedIn post or send me a
+            direct message.
+          </span>
+        </div>
+      </div>
     </main>
   );
 };
