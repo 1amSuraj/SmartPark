@@ -1,4 +1,4 @@
-# 🚗 SmartPark – Parking Automation System
+# 🚗 SmartPark – Reinventing the Parking Experience
 
 ![LOGO](./frontend/public/SmartParkLOGO2.png)
 
