@@ -56,7 +56,7 @@ export default function Home() {
         </a>
         {" | "}
         <a
-          href="https://github.com/1amSuraj/SmartPark"
+          href="https://github.com/1amSuraj"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-1 text-neutral-400 hover:text-white ml-1 align-middle"
