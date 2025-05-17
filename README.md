@@ -19,6 +19,8 @@ SmartPark is an intelligent parking automation solution that modernizes traditio
 ✅ Ideal for private, commercial, or apartment parking lots where gatekeepers handle entry while drivers enjoy a seamless, contactless payment experience.
 
 ---
+## Video Explaination of the Project
+**Link** : https://youtu.be/uw7hnoKk-Kg
 
 ## 📌 Key Features
 
