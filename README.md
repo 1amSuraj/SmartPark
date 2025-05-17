@@ -6,6 +6,20 @@ SmartPark is an intelligent parking automation solution that modernizes traditio
 
 ---
 
+> ⚠️ **IMPORTANT NOTE**
+
+🧑‍✈️ This website is **intended to be used only by the parking gatekeeper**.
+
+🚗 Drivers **do not interact with the system directly**. There is **no user-facing interface or login** for drivers.
+
+💬 All driver actions happen via **WhatsApp and SMS**, where they receive a **payment link** automatically.
+
+🛠️ This is a **fully backend-powered automation system** focused on reducing human involvement and minimizing entry/exit delays.
+
+✅ Ideal for private, commercial, or apartment parking lots where gatekeepers handle entry while drivers enjoy a seamless, contactless payment experience.
+
+---
+
 ## 📌 Key Features
 
 - **Automated Entry/Exit**: Entry gate opens automatically upon payment confirmation.
