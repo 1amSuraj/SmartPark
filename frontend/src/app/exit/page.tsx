@@ -25,10 +25,6 @@ const Page = () => {
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/parking/exit`,
         { data: payload }
       );
-      // const response = await axios.delete(
-      //   "http://localhost:5000/api/parking/exit",
-      //   { data: payload }
-      // );
 
       if (response.status === 203) {
         toast.warning("Payment still pending", {

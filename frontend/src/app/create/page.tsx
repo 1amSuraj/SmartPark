@@ -134,6 +134,7 @@ const Page = () => {
       >
         {scanning ? <LoadingSpinner /> : "Scan Plate Automatically"}
       </button>
+
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-4xl bg-neutral-800 rounded-2xl shadow-xl p-10 space-y-8"
@@ -217,11 +218,27 @@ const Page = () => {
           </button>
         </div>
       </form>
-      <div>
-        <img src="ApiScanner.png" alt="Api" className="h-40 mt-10 mb-4" />
+      <div className="flex flex-col md:flex-row items-center mt-10 mb-4">
+        <img
+          src="ApiScanner.png"
+          alt="Api"
+          className="h-40 mb-4 md:mb-0 md:mr-8"
+        />
+        <div className="bg-neutral-800 border border-neutral-700 rounded-xl px-6 py-4 shadow-lg max-w-md w-full text-center">
+          <span className="text-neutral-200 text-sm font-medium">
+            {/* Example text, replace with your own */}
+            You have to scan this QR for Whatsapp services activation because I
+            am using Sandbox version for whatsapp messages, when it will be live
+            then there will be no need to scan this
+          </span>
+        </div>
       </div>
       <p className="text-md text-neutral-400 text-center">
-        Scan this to activate Whatsapp Services
+        To test the "PAY" feature, first scan this QR to activate the Whatsapp
+        services, then create entry from that number, after that let the entry
+        go beyond the selected duration. When the time limit exceeds, try
+        sending "PAY" on the Gupshup number, it will send you payment link with
+        updated bill
       </p>
     </main>
   );
