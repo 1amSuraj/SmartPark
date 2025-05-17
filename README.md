@@ -1,5 +1,7 @@
 # 🚗 SmartPark – Parking Automation System
 
+![System Design](./frontend/public/ReadmeImage.png)
+
 SmartPark is an intelligent parking automation solution that modernizes traditional parking processes by automating vehicle entry/exit, integrating seamless WhatsApp-based payments, and providing real-time vehicle tracking. Designed with scalability and convenience in mind, SmartPark eliminates queues, reduces manual errors, and brings a cashless, digital-first experience to everyday parking.
 
 ---
@@ -42,6 +44,7 @@ SmartPark is an intelligent parking automation solution that modernizes traditio
 
 5. **Payment Message Sent in Real-Time**  
    Simultaneously, the driver receives:
+
    - A **WhatsApp message** (via Gupshup API) with a unique payment link.
    - An **SMS** as backup containing the same link.
 
@@ -49,6 +52,7 @@ SmartPark is an intelligent parking automation solution that modernizes traditio
    The driver can complete the payment at their convenience—either immediately or before their allotted duration ends.
 
 7. **Exit Gate Behavior Based on Payment**
+
    - If **payment is already done**, the exit gate opens automatically when the ANPR system detects the vehicle.
    - If **payment is pending**, the system:
      - Sends a new WhatsApp message with an updated bill including the full parking duration.
@@ -69,40 +73,43 @@ This Mongoose schema stores each parking session, capturing both the initial ent
 
 ### ✅ Fields Overview
 
-| Field              | Type     | Description                                                                 |
-|--------------------|----------|-----------------------------------------------------------------------------|
-| `vehicleNo`         | String   | The license plate number detected via ANPR                                 |
-| `vehicleType`       | String   | Type of vehicle (e.g., car, bike, truck)                                   |
-| `phone`             | String   | Driver's phone number used to send payment links via WhatsApp/SMS          |
-| `parkingDuration`   | Number   | Duration (in hours) initially selected by the driver                        |
-| `entryTime`         | Date     | Timestamp when the vehicle entered the parking lot                          |
-| `exitTime`          | Date     | Timestamp when the vehicle left (set later at exit)                         |
-| `paymentStatus`     | String   | `"pending"` or `"paid"` – reflects whether payment is completed             |
-| `paymentLinkId`     | String   | Identifier for the payment link sent via Gupshup API                        |
-| `totalAmount`       | Number   | Final charge based on duration and overtime (if any)                        |
-| `notificationSent`  | Boolean  | Tracks whether payment notification has been sent to the user               |
-| `firstPayment`      | Boolean  | Indicates whether initial payment was made before overtime                  |
-| `updatedDuration`   | Number   | Updated total parking duration (initial + extra if overstayed)              |
-| `extraDuration`     | Number   | Additional duration (in hours) beyond original parking time                 |
+| Field              | Type    | Description                                                       |
+| ------------------ | ------- | ----------------------------------------------------------------- |
+| `vehicleNo`        | String  | The license plate number detected via ANPR                        |
+| `vehicleType`      | String  | Type of vehicle (e.g., car, bike, truck)                          |
+| `phone`            | String  | Driver's phone number used to send payment links via WhatsApp/SMS |
+| `parkingDuration`  | Number  | Duration (in hours) initially selected by the driver              |
+| `entryTime`        | Date    | Timestamp when the vehicle entered the parking lot                |
+| `exitTime`         | Date    | Timestamp when the vehicle left (set later at exit)               |
+| `paymentStatus`    | String  | `"pending"` or `"paid"` – reflects whether payment is completed   |
+| `paymentLinkId`    | String  | Identifier for the payment link sent via Gupshup API              |
+| `totalAmount`      | Number  | Final charge based on duration and overtime (if any)              |
+| `notificationSent` | Boolean | Tracks whether payment notification has been sent to the user     |
+| `firstPayment`     | Boolean | Indicates whether initial payment was made before overtime        |
+| `updatedDuration`  | Number  | Updated total parking duration (initial + extra if overstayed)    |
+| `extraDuration`    | Number  | Additional duration (in hours) beyond original parking time       |
 
 ---
 
 ### 🔄 Lifecycle Behavior
 
-**Entry**  
-- Fields populated: `vehicleNo`, `vehicleType`, `phone`, `parkingDuration`, `entryTime`  
+**Entry**
+
+- Fields populated: `vehicleNo`, `vehicleType`, `phone`, `parkingDuration`, `entryTime`
 - Auto-calculated: `updatedDuration` defaults to `parkingDuration`
 
-**During Parking**  
-- Notification logic checks `notificationSent`  
+**During Parking**
+
+- Notification logic checks `notificationSent`
 - Payment status updates to `"paid"` after success
 
-**Exit**  
-- `exitTime` is logged  
-- If overstayed:  
-  - `extraDuration` is calculated  
-  - `updatedDuration = parkingDuration + extraDuration`  
-  - `totalAmount` recalculated  
+**Exit**
+
+- `exitTime` is logged
+- If overstayed:
+  - `extraDuration` is calculated
+  - `updatedDuration = parkingDuration + extraDuration`
+  - `totalAmount` recalculated
   - WhatsApp **"PAY"** command triggers new link and updates schema
 
 ---
@@ -124,10 +131,10 @@ parkingSchema.pre("save", function (next) {
 
 ## 👨‍💻 Author
 
-- **Name**: Suraj Srivastava  
-- **LinkedIn**: [linkedin.com/in/suraj-srivastava41](https://linkedin.com/in/suraj-srivastava41)  
-- **GitHub**: [github.com/1amSuraj](https://github.com/1amSuraj)  
-- **Email**: srisuraj41@gmail.com  
+- **Name**: Suraj Srivastava
+- **LinkedIn**: [linkedin.com/in/suraj-srivastava41](https://linkedin.com/in/suraj-srivastava41)
+- **GitHub**: [github.com/1amSuraj](https://github.com/1amSuraj)
+- **Email**: srisuraj41@gmail.com
 
 ---
 
