@@ -6,20 +6,14 @@ const Stats = require("../models/Stats");
 //   now.setUTCHours(0, 0, 0, 0);
 //   return now;
 // }
-function getTodayMidnightIST() {
+function getTodayMidnightUTC() {
   const now = new Date();
-  // Convert to IST by adding 5 hours 30 minutes
-  const istOffset = 5.5 * 60 * 60 * 1000;
-  const utc = now.getTime() + now.getTimezoneOffset() * 60000;
-  const istDate = new Date(utc + istOffset);
-  istDate.setHours(0, 0, 0, 0); // Set to midnight IST
-  // Now get UTC time for IST midnight
-  const midnightIST_utc = new Date(istDate.getTime() - istOffset);
-  return midnightIST_utc;
+  now.setUTCHours(0, 0, 0, 0);
+  return now;
 }
 
 async function updateStatsOnEntry() {
-  const today = getTodayMidnightIST();
+  const today = getTodayMidnightUTC();
   let stats = await Stats.findOne({ date: today });
   if (!stats) {
     stats = await Stats.create({ date: today });
@@ -29,7 +23,7 @@ async function updateStatsOnEntry() {
 }
 
 async function updateStatsOnPayment(amount) {
-  const today = getTodayMidnightIST();
+  const today = getTodayMidnightUTC();
   let stats = await Stats.findOne({ date: today });
   if (!stats) {
     stats = await Stats.create({ date: today });
@@ -318,7 +312,7 @@ const deletingVehicleEntries = async (req, res) => {
 
 const getStats = async (req, res) => {
   try {
-    const today = getTodayMidnightIST();
+    const today = getTodayMidnightUTC();
 
     // Get today's stats
     const todayStats = (await Stats.findOne({ date: today })) || {
@@ -326,18 +320,18 @@ const getStats = async (req, res) => {
       entriesToday: 0,
     };
 
-    // Calculate last 7 and 30 days
+    // Calculate last 7 and 30 days (including today)
     const sevenDaysAgo = new Date(today);
-    sevenDaysAgo.setDate(today.getDate() - 6);
+    sevenDaysAgo.setUTCDate(today.getUTCDate() - 6);
     const monthAgo = new Date(today);
-    monthAgo.setDate(today.getDate() - 29);
+    monthAgo.setUTCDate(today.getUTCDate() - 29);
 
     const stats7 = await Stats.aggregate([
-      { $match: { date: { $gte: sevenDaysAgo } } },
+      { $match: { date: { $gte: sevenDaysAgo, $lte: today } } },
       { $group: { _id: null, total: { $sum: "$totalPaidToday" } } },
     ]);
     const stats30 = await Stats.aggregate([
-      { $match: { date: { $gte: monthAgo } } },
+      { $match: { date: { $gte: monthAgo, $lte: today } } },
       { $group: { _id: null, total: { $sum: "$totalPaidToday" } } },
     ]);
     res.json({
