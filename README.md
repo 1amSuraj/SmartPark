@@ -20,7 +20,7 @@ SmartPark is an intelligent parking automation solution that modernizes traditio
 - **Frontend**: Next.js (TypeScript), Tailwind CSS
 - **Backend**: Node.js, Express.js
 - **Database**: MongoDB
-- **Messaging & Payment**: Gupshup WhatsApp API
+- **Messaging & Payment**: Gupshup WhatsApp API, RazorPay API
 - **ANPR**: Python (OpenCV, EasyOCR)
 - **Dev Tools**: Postman, Git
 
