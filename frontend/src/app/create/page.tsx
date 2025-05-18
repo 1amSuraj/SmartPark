@@ -181,7 +181,7 @@ const Page = () => {
               type="tel"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              placeholder="9876543210"
+              placeholder="Correct Phone No."
               className="bg-neutral-700 text-white px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-grey-400"
               required
             />
