@@ -156,14 +156,14 @@ const Page = () => {
           </div>
 
           {/* Vehicle Type */}
-          <div className="flex flex-col ">
+          <div className="flex flex-col">
             <label className="text-sm font-medium text-neutral-300 mb-1">
               Vehicle Type
             </label>
             <select
               value={vehicleType}
               onChange={(e) => setVehicleType(e.target.value)}
-              className="flex-1 bg-neutral-700 text-white px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-grey-400 cursor-pointer"
+              className="bg-neutral-700 text-white px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-grey-400 cursor-pointer"
               required
             >
               <option value="Car">Car</option>
@@ -185,6 +185,11 @@ const Page = () => {
               className="bg-neutral-700 text-white px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-grey-400"
               required
             />
+            <span className="text-xs text-neutral-400 mt-1">
+              Guys to test this app you have to type in your correct phone
+              number then only you will get the messages don't try it with fake
+              nubmers{" "}
+            </span>
           </div>
 
           {/* Duration */}
@@ -228,8 +233,7 @@ const Page = () => {
           <span className="text-neutral-200 text-sm font-medium">
             {/* Example text, replace with your own */}
             You need to scan this QR code to activate WhatsApp services because
-            I'm currently using the Sandbox version. Once the service goes live,
-            scanning the QR code will no longer be necessary.
+            I'm currently using the Sandbox version.
           </span>
         </div>
       </div>
