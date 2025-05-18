@@ -8,7 +8,7 @@ SmartPark is an intelligent parking automation solution that modernizes traditio
 
 > ⚠️ **IMPORTANT NOTE**
 
-🧑‍✈️ This website is **intended to be used only by the parking gatekeeper**.
+🧑‍✈️ This website is **intended to be used only by the parking management**.
 
 🚗 Drivers **do not interact with the system directly**. There is **no user-facing interface or login** for drivers.
 
