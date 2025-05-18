@@ -227,9 +227,9 @@ const Page = () => {
         <div className="bg-neutral-800 border border-neutral-700 rounded-xl px-6 py-4 shadow-lg max-w-md w-full text-center">
           <span className="text-neutral-200 text-sm font-medium">
             {/* Example text, replace with your own */}
-            You have to scan this QR for Whatsapp services activation because I
-            am using Sandbox version for whatsapp messages, when it will be live
-            then there will be no need to scan this
+            You need to scan this QR code to activate WhatsApp services because
+            I'm currently using the Sandbox version. Once the service goes live,
+            scanning the QR code will no longer be necessary.
           </span>
         </div>
       </div>
