@@ -182,19 +182,16 @@ const handleGupshupWebhook = async (req, res) => {
   try {
     const { type, payload } = req.body;
 
-    // Check if the incoming message is of type "message"
     if (type === "message") {
-      const { text } = payload.payload; // Extract the text message
-      const { phone } = payload.sender; // Extract the sender's phone number
+      const { text } = payload.payload;
+      const { phone } = payload.sender;
 
       console.log(`Received message: "${text}" from phone: ${phone}`);
 
-      // Check if the message text is "pay"
       if (text.toLowerCase() === "pay") {
         console.log(`Triggering handlePayMessage for phone: ${phone}`);
 
-        // Trigger the handlePayMessage function
-        req.body.phone = phone; // Set the phone number in the request body
+        req.body.phone = phone; // Setting phone number in req
         await handlePayMessage(req, res);
         return;
       }
@@ -209,7 +206,7 @@ const handleGupshupWebhook = async (req, res) => {
 
 const getAllParkingEntries = async (req, res) => {
   try {
-    const entries = await Parking.find(); // Fetch all parking entries
+    const entries = await Parking.find();
     res.status(200).json(entries);
   } catch (err) {
     console.error("Error fetching parking entries:", err);
@@ -297,13 +294,11 @@ const getStats = async (req, res) => {
   try {
     const today = getTodayMidnightUTC();
 
-    // Get today's stats
     const todayStats = (await Stats.findOne({ date: today })) || {
       totalPaidToday: 0,
       entriesToday: 0,
     };
 
-    // Calculate last 7 and 30 days (including today)
     const sevenDaysAgo = new Date(today);
     sevenDaysAgo.setUTCDate(today.getUTCDate() - 6);
     const monthAgo = new Date(today);
