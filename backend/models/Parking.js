@@ -13,8 +13,8 @@ const parkingSchema = new mongoose.Schema({
     default: "pending",
   },
   paymentLinkId: { type: String },
-  totalAmount: { type: Number, default: 0 }, // New field to store the total amount
-  notificationSent: { type: Boolean, default: false }, // New field to track if the notification has been sent
+  totalAmount: { type: Number, default: 0 },
+  notificationSent: { type: Boolean, default: false },
   firstPayment: { type: Boolean, default: false },
   updatedDuration: { type: Number },
   extraDuration: { type: Number, default: 0 },
