@@ -6,7 +6,7 @@ numpy==2.2.5
 opencv-python-headless
 python-dotenv==1.1.0
 requests==2.32.4
-urllib3==2.4.0
+urllib3==2.6.0
 Flask==2.3.3
 Flask-Cors==6.0.0
 gunicorn
